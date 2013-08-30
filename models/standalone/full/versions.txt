@@ -1,1 +1,4 @@
+JBoss EAP:6.1.0:Wildfly-8.0.0.Beta1-SNAPSHOT.dmr
+JBoss EAP:6.0.0:Wildfly-8.0.0.Beta1-SNAPSHOT.dmr
+Wildfly:8.0.0.Alpha1:Wildfly-8.0.0.Beta1-SNAPSHOT.dmr
 Wildfly:8.0.0.Beta1:Wildfly-8.0.0.Beta1-SNAPSHOT.dmr

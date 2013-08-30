@@ -38,6 +38,7 @@ public class Main {
 
             SiteGenerator siteGenerator = new SiteGenerator(versions, configuration, target);
             siteGenerator.createMainPage();
+            siteGenerator.createAboutPage();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

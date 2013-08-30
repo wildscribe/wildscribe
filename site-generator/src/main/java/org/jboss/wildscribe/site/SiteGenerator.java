@@ -19,6 +19,8 @@ import java.util.Map;
  */
 public class SiteGenerator {
 
+    public static final String INDEX_HTML = "index.html";
+    public static final String ABOUT_HTML = "about.html";
     private final List<Version> versions;
     private final Configuration configuration;
     private final File outputDir;
@@ -32,7 +34,7 @@ public class SiteGenerator {
     public void createMainPage() throws IOException, TemplateException {
         Template template = configuration.getTemplate("layout.html");
         final Map<String, Object> data = new HashMap<String, Object>();
-        data.put("page", "index.html");
+        data.put("page", INDEX_HTML);
         data.put("versions", versions);
         data.put("urlbase", outputDir.getAbsoluteFile());
         boolean wf = false;
@@ -51,7 +53,15 @@ public class SiteGenerator {
             }
         }
 
-        template.process(data, new PrintWriter(new FileOutputStream(new File(outputDir, "index.html"))));
+        template.process(data, new PrintWriter(new FileOutputStream(new File(outputDir, INDEX_HTML))));
     }
 
+    public void createAboutPage() throws IOException, TemplateException {
+        Template template = configuration.getTemplate("layout.html");
+        final Map<String, Object> data = new HashMap<String, Object>();
+        data.put("page", ABOUT_HTML);
+        data.put("versions", versions);
+        data.put("urlbase", outputDir.getAbsoluteFile());
+        template.process(data, new PrintWriter(new FileOutputStream(new File(outputDir, ABOUT_HTML))));
+    }
 }

@@ -64,8 +64,9 @@
             For example: <version.org.jboss.as.console>
          -->
         <version.junit>4.11</version.junit>
-        <version.org.wildfly>8.0.0.Alpha4</version.org.wildfly>
+        <version.org.freemarker>2.3.20</version.org.freemarker>
         <version.org.jboss.dmr>1.2.0.Beta2</version.org.jboss.dmr>
+        <version.org.wildfly>8.0.0.Alpha4</version.org.wildfly>
 
         <!-- Surefire args -->
         <surefire.jpda.args/>
@@ -207,6 +208,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${version.junit}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${version.org.freemarker}</version>
             </dependency>
 
             <dependency>

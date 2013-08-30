@@ -1,0 +1,1 @@
+Wildfly:8.0.0.Beta1:Wildfly-8.0.0.Beta1-SNAPSHOT.dmr

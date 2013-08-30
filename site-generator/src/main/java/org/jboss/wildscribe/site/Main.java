@@ -1,34 +1,54 @@
 package org.jboss.wildscribe.site;
 
-import org.jboss.dmr.ModelNode;
-
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
+
+    private static final String VERSION = "versions.txt";
 
     public static void main(final String[] args) {
         try {
             if (args.length != 2) {
-                System.out.println("USAGE: java -jar site-generator.jar model-file.txt output-directory");
+                System.out.println("USAGE: java -jar site-generator.jar model-directory output-directory");
                 System.exit(1);
             }
-            File modelFile = new File(args[0]);
+            File modelDir = new File(args[0]);
 
             final File target = new File(args[1]);
+            FileUtils.deleteRecursive(target);
             target.mkdirs();
             System.out.print("Generating site in " + target.getAbsolutePath());
 
-            ModelNode node = new ModelNode();
-            node.readExternal(new BufferedInputStream(new FileInputStream(modelFile)));
+            copyBootstrap(target);
 
-            System.out.println(node);
+            List<Version> versions = loadVersions(modelDir);
+            Collections.sort(versions);
+
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
+
+    private static void copyBootstrap(File target) throws IOException {
+        FileUtils.copyDirectoryFromJar(Main.class.getClassLoader().getResource("bootstrap"), target);
+    }
+
+
+    private static List<Version> loadVersions(File modelDir) {
+        final List<Version> ret = new ArrayList<Version>();
+        final String versionsString = FileUtils.readFile(new File(modelDir, VERSION));
+        final String[] versionParts = versionsString.split("\n");
+        for (final String version : versionParts) {
+            final String[] parts = version.split(":");
+            ret.add(new Version(parts[0], parts[1], new File(modelDir, parts[2])));
+        }
+        return ret;
+    }
+
 
 }

@@ -3,7 +3,6 @@ package org.jboss.wildscribe.site;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -23,10 +22,9 @@ public class Main {
             target.mkdirs();
             System.out.print("Generating site in " + target.getAbsolutePath());
 
-            copyBootstrap(target);
+            copyResources(target);
 
             List<Version> versions = loadVersions(modelDir);
-            Collections.sort(versions);
 
 
         } catch (Exception e) {
@@ -34,8 +32,9 @@ public class Main {
         }
     }
 
-    private static void copyBootstrap(File target) throws IOException {
-        FileUtils.copyDirectoryFromJar(Main.class.getClassLoader().getResource("bootstrap"), target);
+    private static void copyResources(File target) throws IOException {
+        FileUtils.copyDirectoryFromJar(Main.class.getClassLoader().getResource("staticresources"), target);
+        FileUtils.copyDirectoryFromJar(Main.class.getClassLoader().getResource("templates"), target);
     }
 
 

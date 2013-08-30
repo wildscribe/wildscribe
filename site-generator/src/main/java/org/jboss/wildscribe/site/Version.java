@@ -7,7 +7,7 @@ import java.io.File;
  *
  * @author Stuart Douglas
  */
-public final class Version implements Comparable<Version> {
+public final class Version {
 
     private final String product;
     private final String version;
@@ -31,12 +31,4 @@ public final class Version implements Comparable<Version> {
         return dmrFile;
     }
 
-    @Override
-    public int compareTo(Version o) {
-        int s = product.compareTo(o.product);
-        if (s != 0) {
-            return s;
-        }
-        return version.compareTo(o.version);
-    }
 }

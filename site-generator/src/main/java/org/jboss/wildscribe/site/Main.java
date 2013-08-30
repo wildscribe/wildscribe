@@ -59,6 +59,7 @@ public class Main {
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
         cfg.setIncompatibleImprovements(new freemarker.template.Version(2, 3, 20));  // FreeMarker 2.3.20
+        cfg.setURLEscapingCharset("UTF-8");
         return cfg;
     }
 

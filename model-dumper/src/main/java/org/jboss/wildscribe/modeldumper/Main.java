@@ -4,8 +4,11 @@ import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.dmr.ModelNode;
 import org.xnio.IoUtils;
 
+import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.net.URI;
 
 import static org.jboss.as.controller.client.helpers.ClientConstants.FAILURE_DESCRIPTION;
@@ -19,13 +22,17 @@ import static org.jboss.as.controller.client.helpers.ClientConstants.SUCCESS;
 public class Main {
 
     public static void main(final String[] args) {
-        ModelControllerClient client = null;
+
+        if(args.length != 1) {
+            System.out.println("USAGE: java -jar model-dumper.jar target-file");
+            System.exit(1);
+        }
+
+        ModelControllerClient client = connectDefault();
+
         try {
-            if (args.length == 0) {
-                client = connectDefault();
-            } else {
-                client = connect(args[0]);
-            }
+
+            final OutputStream out = new FileOutputStream(args[0]);
 
             final ModelNode operation = new ModelNode();
             operation.get(OP).set("read-resource-description");
@@ -34,10 +41,12 @@ public class Main {
             operation.get(OP_ADDR).set(new ModelNode());
             try {
                 ModelNode result = executeForResult(client, operation);
-                result.writeString(new PrintWriter(System.out), false);
+                result.writeExternal(new DataOutputStream(out));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         } finally {
             IoUtils.safeClose(client);
         }

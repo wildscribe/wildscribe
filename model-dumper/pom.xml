@@ -24,7 +24,7 @@
 
     <parent>
         <groupId>org.jboss.wildscribe</groupId>
-        <artifactId>wildscrobe-parent</artifactId>
+        <artifactId>wildscribe-parent</artifactId>
         <version>1.0.0.Alpha1-SNAPSHOT</version>
     </parent>
 

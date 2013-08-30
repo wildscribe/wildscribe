@@ -28,7 +28,6 @@
         <version>1.0.0.Alpha1-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jboss.wildscribe</groupId>
     <artifactId>wildscribe-model-dumper</artifactId>
     <version>1.0.0.Alpha1-SNAPSHOT</version>
 
@@ -52,6 +51,7 @@
     </dependencies>
 
     <build>
+        <finalName>model-dumper</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -77,6 +77,42 @@
                 <configuration>
                     <enableAssertions>true</enableAssertions>
                     <runOrder>reversealphabetical</runOrder>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.jboss.wildscribe.modeldumper.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-jar</argument>
+                        <argument>target/${project.build.finalName}.jar</argument>
+                    </arguments>
                 </configuration>
             </plugin>
         </plugins>

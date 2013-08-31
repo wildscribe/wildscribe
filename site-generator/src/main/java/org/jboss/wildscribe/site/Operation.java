@@ -5,7 +5,7 @@ import org.jboss.dmr.Property;
 /**
 * @author Stuart Douglas
 */
-public class Operation {
+public class Operation implements Comparable<Operation> {
 
     private final String name;
     private final String description;
@@ -29,5 +29,14 @@ public class Operation {
         Operation op = new Operation(name, description);
 
         return op;
+    }
+
+    @Override
+    public int compareTo(Operation o) {
+        return name.compareTo(o.name);
+    }
+
+    public final class Parameters {
+
     }
 }

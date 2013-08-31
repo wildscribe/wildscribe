@@ -2,20 +2,38 @@
     <div class="page-header">
         <h1>${version.product} ${version.version} Model Reference</h1>
     </div>
+
+    <ol class="breadcrumb">
+        <#list breadcrumbs as crumb>
+            <#if crumb_has_next>
+                <li><a href="${urlbase}/${version.product?url}/${version.version?url}/${crumb.url?url}">${crumb.label}</a></li>
+            <#else>
+                <li class="active">${crumb.label}</li>
+            </#if>
+        </#list>
+    </ol>
+
     <div class="well">
         <p>${model.description}</p>
     </div>
 
     <div class="page-header">
-        <h2>Operations</h2>
-        <#list model.operations as op>
-            <a class="accordian-toggle" data-toggle="collapse" data-target="#operation-${op.name}">
-                ${op.name}
-            </a>
-            <div id="#operation-${op.name}" class="collapse in">
-                Here is some very useful operation info
-            </div>
-        </#list>
+
+        <h2 class="resource-header" data-toggle="collapse" data-target="#operations">Operations (${model.operations?size})</h2>
+
+        <div class="collapse" id="operations">
+            <#list model.operations as op>
+                <a data-toggle="collapse" data-target="#operation-${op.name}">
+                    <div class="panel-heading">
+                        ${op.name}
+                    </div>
+                </a>
+
+                <div id="operation-${op.name}" class="collapse">
+                    ${op.description}
+                </div>
+            </#list>
+        </div>
     </div>
 
 

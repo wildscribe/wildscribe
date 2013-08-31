@@ -48,6 +48,7 @@ public class ResourceDescription {
         for(Property i : node.get("operations").asPropertyList()) {
             ops.add(Operation.fromProperty(i));
         }
+        Collections.sort(ops);
         return new ResourceDescription(node.get("description").asString(), Collections.<Child>emptyList(), Collections.<Attribute>emptyList(), ops);
 
     }

@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,11 @@ public class SiteGenerator {
         data.put("version", version);
         data.put("urlbase", outputDir.getAbsoluteFile());
         data.put("model", ResourceDescription.fromModelNode(model));
+
+        final List<Breadcrumb> crumbs = new ArrayList<Breadcrumb>();
+        crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), "index.html"));
+        crumbs.add(new Breadcrumb("TMP", "index.html"));
+        data.put("breadcrumbs", crumbs);
 
         File parent = new File(outputDir.getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion());
         parent.mkdirs();

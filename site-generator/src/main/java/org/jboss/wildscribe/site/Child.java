@@ -46,11 +46,13 @@ public class Child implements Comparable<Child> {
         String name = property.getName();
         String description = property.getValue().get("description").asString();
 
-        ModelNode modelDesc = property.getValue().get("model-description");
         final List<Child> registrations = new ArrayList<Child>();
-        for(Property child : modelDesc.asPropertyList()) {
-            if(!child.getName().equals("*")) {
-                registrations.add(new Child(child.getName(), child.getValue().get("description").asString(), null));
+        ModelNode modelDesc = property.getValue().get("model-description");
+        if (modelDesc.isDefined()) {
+            for (Property child : modelDesc.asPropertyList()) {
+                if (!child.getName().equals("*")) {
+                    registrations.add(new Child(child.getName(), child.getValue().get("description").asString(), null));
+                }
             }
         }
 

@@ -83,11 +83,18 @@ public class SiteGenerator {
 
 
         Template template = configuration.getTemplate(LAYOUT_HTML);
+
+        createResourcePage(version, model, template);
+
+    }
+
+    private void createResourcePage(Version version, ModelNode model, Template template, String ... path) throws TemplateException, IOException {
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
         data.put("version", version);
         data.put("urlbase", outputDir.getAbsoluteFile());
+        data.put("currenturl", "");
         data.put("model", ResourceDescription.fromModelNode(model));
 
         final List<Breadcrumb> crumbs = new ArrayList<Breadcrumb>();
@@ -98,6 +105,15 @@ public class SiteGenerator {
         File parent = new File(outputDir.getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion());
         parent.mkdirs();
         template.process(data, new PrintWriter(new FileOutputStream(new File(parent, INDEX_HTML))));
+    }
 
+    private String buildCurrentUrl(final String ... path) {
+        StringBuilder sb = new StringBuilder();
+        for(String i : path) {
+            if(!i.equals("*")) {
+                sb.append(path);
+            }
+        }
+        return sb.toString();
     }
 }

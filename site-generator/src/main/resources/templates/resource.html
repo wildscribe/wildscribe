@@ -6,9 +6,11 @@
     <ol class="breadcrumb">
         <#list breadcrumbs as crumb>
             <#if crumb_has_next>
-                <li><a href="${urlbase}/${version.product?url}/${version.version?url}/${crumb.url?url}">${crumb.label}</a></li>
-            <#else>
-                <li class="active">${crumb.label}</li>
+                <li>
+                    <a href="${urlbase}/${version.product?url}/${version.version?url}/${crumb.url?url}">${crumb.label}</a>
+                </li>
+                <#else>
+                    <li class="active">${crumb.label}</li>
             </#if>
         </#list>
     </ol>
@@ -19,30 +21,85 @@
 
     <div class="page-header">
 
-        <h2 class="resource-header" data-toggle="collapse" data-target="#operations">Operations (${model.operations?size})</h2>
+        <h3 class="resource-header" data-toggle="collapse" data-target="#children">Children
+            (${model.children?size})</h3>
 
-        <div class="collapse" id="operations">
-            <#list model.operations as op>
-                <a data-toggle="collapse" data-target="#operation-${op.name}">
-                    <div class="panel-heading">
-                        ${op.name}
-                    </div>
-                </a>
+        <div class="collapse in" id="children">
+            <ul>
+                <#list model.children as child>
+                    <li>
 
-                <div id="operation-${op.name}" class="collapse">
-                    ${op.description}
-                </div>
-            </#list>
+                        <#if child.children?size == 0>
+                            <a href="${urlbase}/${version.product?url}/${version.version?url}${currenturl}/${child.name}/index.html">
+                                ${child.name}
+                            </a>
+                            <#else>
+                                <b>${child.name}</b>
+                        </#if>
+                        ${child.description}
+
+                    </li>
+                    <#if child.children?size != 0>
+                        <ul>
+                            <#list child.children as c>
+                                <li>
+                                    <a href="${urlbase}/${version.product?url}/${version.version?url}${currenturl}/${child.name}/${c.name}/index.html">
+                                        ${c.name}
+                                    </a>
+                                    ${c.description}
+                                </li>
+                            </#list>
+                        </ul>
+                    </#if>
+                </#list>
+            </ul>
         </div>
     </div>
 
-
     <div class="page-header">
-        <h2>Children</h2>
-        <#list model.children as child>
-            ${child.asProperty().getName()}
-        </#list>
+
+        <h3 class="resource-header" data-toggle="collapse" data-target="#attributes">Attributes
+            (${model.attributes?size})</h3>
+
+        <div class="collapse in" id="attributes">
+            <ul>
+                <#list model.attributes as attribute>
+                    <li>
+                        <a data-toggle="collapse" data-target="#operation-${attribute.name}">
+                            ${attribute.name}
+                        </a>
+                        ${attribute.description}
+                    </li>
+
+                    <div id="operation-${attribute.name}" class="collapse">
+                        More Info
+                    </div>
+                </#list>
+            </ul>
+        </div>
     </div>
 
+    <div class="page-header">
+
+        <h3 class="resource-header" data-toggle="collapse" data-target="#operations">Operations
+            (${model.operations?size})</h3>
+
+        <div class="collapse in" id="operations">
+            <ul>
+                <#list model.operations as op>
+                    <li>
+                        <a data-toggle="collapse" data-target="#operation-${op.name}">
+                            ${op.name}
+                        </a>
+                        ${op.description}
+
+                        <div id="operation-${op.name}" class="collapse">
+                            More info
+                        </div>
+                    </li>
+                </#list>
+            </ul>
+        </div>
+    </div>
 
 </div>

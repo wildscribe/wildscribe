@@ -41,7 +41,7 @@ public class SiteGenerator {
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", INDEX_HTML);
         data.put("versions", versions);
-        data.put("urlbase", outputDir.getAbsoluteFile());
+        data.put("urlbase", getUrlBase());
         boolean wf = false;
         boolean eap = false;
         boolean as7 = false;
@@ -66,7 +66,7 @@ public class SiteGenerator {
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", ABOUT_HTML);
         data.put("versions", versions);
-        data.put("urlbase", outputDir.getAbsoluteFile());
+        data.put("urlbase", getUrlBase());
         template.process(data, new PrintWriter(new FileOutputStream(new File(outputDir, ABOUT_HTML))));
     }
 
@@ -94,7 +94,7 @@ public class SiteGenerator {
         data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
         data.put("version", version);
-        data.put("urlbase", outputDir.getAbsoluteFile());
+        data.put("urlbase", getUrlBase());
         data.put("currenturl", currentUrl);
         ResourceDescription resourceDescription = ResourceDescription.fromModelNode(model);
         data.put("model", resourceDescription);
@@ -129,6 +129,13 @@ public class SiteGenerator {
             }
         }
 
+    }
+
+    private String getUrlBase() {
+        if(System.getProperty("url") == null) {
+            return outputDir.getAbsolutePath();
+        }
+        return System.getProperty("url");
     }
 
     private PathElement[] addToPath(PathElement[] path, final String key, final String value) {

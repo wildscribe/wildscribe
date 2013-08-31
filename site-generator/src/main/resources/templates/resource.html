@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="page-header">
+        <h1>${version.product} ${version.version} Model Reference</h1>
+    </div>
+    <div class="well">
+        <p>${model.description}</p>
+    </div>
+
+    <div class="page-header">
+        <h2>Operations</h2>
+        <#list model.operations as op>
+            <a class="accordian-toggle" data-toggle="collapse" data-target="#operation-${op.name}">
+                ${op.name}
+            </a>
+            <div id="#operation-${op.name}" class="collapse in">
+                Here is some very useful operation info
+            </div>
+        </#list>
+    </div>
+
+
+    <div class="page-header">
+        <h2>Children</h2>
+        <#list model.children as child>
+            ${child.asProperty().getName()}
+        </#list>
+    </div>
+
+
+</div>

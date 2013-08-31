@@ -44,7 +44,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
+                <li class="${(page == 'index.html')?string('active', '')}"><a href="${urlbase}/index.html">Home</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Versions<b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -56,7 +56,7 @@
                 </li>
                 <li><a href="http://www.jboss.com">Get JBoss EAP</a></li>
                 <li><a href="http://www.wildfly.org">Get Wildfly</a></li>
-                <li><a href="${urlbase}/about.html">About</a></li>
+                <li class="${(page == 'about.html')?string('active', '')}"><a href="${urlbase}/about.html">About</a></li>
 
             </ul>
         </div>
@@ -73,7 +73,7 @@
     </footer>
 </div>
 <!-- /container -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="${urlbase}/js/vendor/jquery-1.10.1.min.js"></script>
 <script>window.jQuery || document.write('<script src="${urlbase}/js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 
 <script src="${urlbase}/js/vendor/bootstrap.min.js"></script>

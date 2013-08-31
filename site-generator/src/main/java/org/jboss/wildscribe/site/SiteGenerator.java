@@ -7,7 +7,6 @@ import org.jboss.dmr.ModelNode;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,7 +24,7 @@ public class SiteGenerator {
     public static final String INDEX_HTML = "index.html";
     public static final String ABOUT_HTML = "about.html";
     public static final String LAYOUT_HTML = "layout.html";
-    public static final String VERSION_HTML = "version.html";
+    public static final String RESOURCE_HTML = "resource.html";
     private final List<Version> versions;
     private final Configuration configuration;
     private final File outputDir;
@@ -84,15 +83,15 @@ public class SiteGenerator {
 
         Template template = configuration.getTemplate(LAYOUT_HTML);
         final Map<String, Object> data = new HashMap<String, Object>();
-        data.put("page", VERSION_HTML);
+        data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
         data.put("version", version);
         data.put("urlbase", outputDir.getAbsoluteFile());
+        data.put("model", ResourceDescription.fromModelNode(model));
 
         File parent = new File(outputDir.getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion());
         parent.mkdirs();
         template.process(data, new PrintWriter(new FileOutputStream(new File(parent, INDEX_HTML))));
-
 
     }
 }

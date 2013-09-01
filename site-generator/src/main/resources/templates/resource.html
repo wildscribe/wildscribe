@@ -1,71 +1,72 @@
 <div class="container">
+<div class="page-header">
+    <h1>${version.product} ${version.version} Model Reference</h1>
+</div>
+
+<ol class="breadcrumb">
+    <#list breadcrumbs as crumb>
+        <#if crumb_has_next>
+            <li>
+                <a href="${urlbase}/${version.product?url}/${version.version?url}/${crumb.url?url}">${crumb.label}</a>
+            </li>
+            <#else>
+                <li class="active">${crumb.label}</li>
+        </#if>
+    </#list>
+</ol>
+
+<div class="well">
+    <p>${model.description}</p>
+</div>
+
+<#if model.children?size != 0>
     <div class="page-header">
-        <h1>${version.product} ${version.version} Model Reference</h1>
-    </div>
 
-    <ol class="breadcrumb">
-        <#list breadcrumbs as crumb>
-            <#if crumb_has_next>
-                <li>
-                    <a href="${urlbase}/${version.product?url}/${version.version?url}/${crumb.url?url}">${crumb.label}</a>
-                </li>
-                <#else>
-                    <li class="active">${crumb.label}</li>
-            </#if>
-        </#list>
-    </ol>
+        <h3 class="resource-header" data-toggle="collapse" data-target="#children">Children
+            (${model.children?size})</h3>
 
-    <div class="well">
-        <p>${model.description}</p>
-    </div>
+        <div class="collapse in" id="children">
+            <ul>
+                <#list model.children as child>
+                    <li>
 
-    <#if model.children?size != 0>
-        <div class="page-header">
-
-            <h3 class="resource-header" data-toggle="collapse" data-target="#children">Children
-                (${model.children?size})</h3>
-
-            <div class="collapse in" id="children">
-                <ul>
-                    <#list model.children as child>
-                        <li>
-
-                            <#if child.children?size == 0>
-                                <a href="${urlbase}/${version.product?url}/${version.version?url}${currenturl}/${child.name}/index.html">
-                                    ${child.name}
-                                </a>
-                                <#else>
-                                    <b>${child.name}</b>
-                            </#if>
-                            ${child.description}
-
-                        </li>
-                        <#if child.children?size != 0>
-                            <ul>
-                                <#list child.children as c>
-                                    <li>
-                                        <a href="${urlbase}/${version.product?url}/${version.version?url}${currenturl}/${child.name}/${c.name}/index.html">
-                                            ${c.name}
-                                        </a>
-                                        ${c.description}
-                                    </li>
-                                </#list>
-                            </ul>
+                        <#if child.children?size == 0>
+                            <a href="${urlbase}/${version.product?url}/${version.version?url}${currenturl}/${child.name}/index.html">
+                                ${child.name}
+                            </a>
+                            <#else>
+                                <b>${child.name}</b>
                         </#if>
-                    </#list>
-                </ul>
-            </div>
+                        ${child.description}
+
+                    </li>
+                    <#if child.children?size != 0>
+                        <ul>
+                            <#list child.children as c>
+                                <li>
+                                    <a href="${urlbase}/${version.product?url}/${version.version?url}${currenturl}/${child.name}/${c.name}/index.html">
+                                        ${c.name}
+                                    </a>
+                                    ${c.description}
+                                </li>
+                            </#list>
+                        </ul>
+                    </#if>
+                </#list>
+            </ul>
         </div>
-    </#if>
+    </div>
+</#if>
 
-    <#if model.attributes?size != 0>
+<#if model.attributes?size != 0>
 
-        <div class="page-header">
+    <div class="page-header">
 
-            <h3 class="resource-header" data-toggle="collapse" data-target="#attributes">Attributes
-                (${model.attributes?size})</h3>
+        <h3 class="resource-header" data-toggle="collapse" data-target="#attributes">Attributes
+            (${model.attributes?size})</h3>
 
-            <div class="collapse in" id="attributes">
+        <div class="collapse in" id="attributes">
+            <div class="panel">
                 <ul>
                     <#list model.attributes as attribute>
                         <li>
@@ -143,34 +144,61 @@
                 </ul>
             </div>
         </div>
+    </div>
 
-    </#if>
+</#if>
 
-    <#if model.operations?size != 0>
+<#if model.operations?size != 0>
 
-        <div class="page-header">
+    <div class="page-header">
 
-            <h3 class="resource-header" data-toggle="collapse" data-target="#operations">Operations
-                (${model.operations?size})</h3>
+        <h3 class="resource-header" data-toggle="collapse" data-target="#operations">Operations
+            (${model.operations?size})</h3>
 
-            <div class="collapse in" id="operations">
-                <ul>
-                    <#list model.operations as op>
-                        <li>
-                            <a data-toggle="collapse" data-target="#operation-${op.name}">
-                                ${op.name}
-                            </a>
-                            ${op.description}
+        <div class="collapse in" id="operations">
+            <ul>
+                <#list model.operations as op>
+                    <li>
+                        <a data-toggle="collapse" data-target="#operation-${op.name}">
+                            ${op.name}
+                        </a>
+                        ${op.description}
 
-                            <div id="operation-${op.name}" class="collapse">
-                                More info
-                            </div>
-                        </li>
-                    </#list>
-                </ul>
-            </div>
+                        <div id="operation-${op.name}" class="collapse">
+                            <table class="table">
+                                <tr>
+                                    <td><b>Return Type</b></td>
+                                    <td>${op.returnType}</td>
+                                </tr>
+                                <#if op.parameters?size != 0>
+                                    <tr>
+                                        <td><b>Request Parameter</b></td>
+                                        <td><b>Type</b></td>
+                                        <td><b>Description</b></td>
+                                        <td><b>Nillable</b></td>
+                                        <td><b>Required</b></td>
+                                        <td><b>Expressions Allowed</b></td>
+                                    </tr>
+                                    <#list op.parameters as param>
+                                        <tr>
+                                            <td>${param.name}</td>
+                                            <td>${param.type}</td>
+                                            <td>${param.description}</td>
+                                            <td>${param.nillable?c}</td>
+                                            <td>${param.required?c}</td>
+                                            <td>${param.expressionsAllowed?c}</td>
+                                        </tr>
+                                    </#list>
+                                </#if>
+
+                            </table>
+                        </div>
+                    </li>
+                </#list>
+            </ul>
         </div>
+    </div>
 
-    </#if>
+</#if>
 
 </div>

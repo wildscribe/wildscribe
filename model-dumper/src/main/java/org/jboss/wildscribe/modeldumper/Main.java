@@ -54,10 +54,18 @@ public class Main {
 
     private static ModelControllerClient connectDefault() {
         try {
-            return ModelControllerClient.Factory.create("http-remoting", "localhost", 9990);
+            ModelControllerClient client = ModelControllerClient.Factory.create("http-remoting", "localhost", 9990);
+
+            final ModelNode operation = new ModelNode();
+            operation.get(OP).set("read-resource-description");
+            operation.get(RECURSIVE).set(false);
+            operation.get("operations").set(true);
+            operation.get(OP_ADDR).set(new ModelNode());
+            client.execute(operation);
+            return client;
         } catch (Exception e) {
             try {
-                return ModelControllerClient.Factory.create("remote", "localhost", 9990);
+                return ModelControllerClient.Factory.create("remote", "localhost", 9999);
             } catch (Exception e1) {
                 throw new RuntimeException(e);
             }

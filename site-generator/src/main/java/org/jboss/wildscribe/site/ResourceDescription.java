@@ -45,24 +45,28 @@ public class ResourceDescription {
 
     public static ResourceDescription fromModelNode(final ModelNode node) {
         final List<Operation> ops = new ArrayList<Operation>();
-        for(Property i : node.get("operations").asPropertyList()) {
+        for (Property i : node.get("operations").asPropertyList()) {
             ops.add(Operation.fromProperty(i));
         }
         Collections.sort(ops);
 
 
         final List<Child> children = new ArrayList<Child>();
-        for(Property i : node.get("children").asPropertyList()) {
-            children.add(Child.fromProperty(i));
+        if (node.hasDefined("children")) {
+            for (Property i : node.get("children").asPropertyList()) {
+                children.add(Child.fromProperty(i));
+            }
+            Collections.sort(children);
         }
-        Collections.sort(children);
 
 
         final List<Attribute> attributes = new ArrayList<Attribute>();
-        for(Property i : node.get("attributes").asPropertyList()) {
-            attributes.add(Attribute.fromProperty(i));
+        if (node.hasDefined("attributes")) {
+            for (Property i : node.get("attributes").asPropertyList()) {
+                attributes.add(Attribute.fromProperty(i));
+            }
+            Collections.sort(attributes);
         }
-        Collections.sort(attributes);
 
 
         return new ResourceDescription(node.get("description").asString(), children, attributes, ops);

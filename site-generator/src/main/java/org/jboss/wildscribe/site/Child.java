@@ -4,6 +4,7 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,6 +56,7 @@ public class Child implements Comparable<Child> {
                 }
             }
         }
+        Collections.sort(registrations);
 
         Child op = new Child(name, description, registrations);
 

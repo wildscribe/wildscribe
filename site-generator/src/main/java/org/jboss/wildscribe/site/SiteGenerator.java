@@ -121,9 +121,12 @@ public class SiteGenerator {
                     for (Child registration : child.getChildren()) {
                         PathElement[] newPath = addToPath(path, child.getName(), registration.getName());
 
-                        ModelNode newModel = model.get("children").get(child.getName()).get("model-description").get(registration.getName());
+                        ModelNode childModel = model.get("children").get(child.getName());
+                        if (childModel.hasDefined("model-description") &&  childModel.get("model-description").hasDefined(registration.getName())) {
+                            ModelNode newModel = childModel.get("model-description").get(registration.getName());
 
-                        createResourcePage(version, newModel, template, newPath);
+                            createResourcePage(version, newModel, template, newPath);
+                        }
                     }
                 }
             }
@@ -132,7 +135,7 @@ public class SiteGenerator {
     }
 
     private String getUrlBase() {
-        if(System.getProperty("url") == null) {
+        if (System.getProperty("url") == null) {
             return outputDir.getAbsolutePath();
         }
         return System.getProperty("url");

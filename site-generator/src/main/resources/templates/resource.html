@@ -76,7 +76,68 @@
                         </li>
 
                         <div id="operation-${attribute.name}" class="collapse">
-                            More Info
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Value</th>
+                                </tr>
+                                </thead>
+                                <#if attribute.defaultValue??>
+                                    <tr>
+                                        <td>
+                                            <b>Default Value</b>
+                                        </td>
+                                        <td>
+                                            ${attribute.defaultValue}
+                                        </td>
+                                    </tr>
+                                </#if>
+                                <tr>
+                                    <td>
+                                        <b>Type</b>
+                                    </td>
+                                    <td>
+                                        ${attribute.type}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Nillable</b>
+                                    </td>
+                                    <td>
+                                        ${attribute.nillable?c}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Expressions Allowed</b>
+                                    </td>
+                                    <td>
+                                        ${attribute.expressionsAllowed?c}
+                                    </td>
+                                </tr>
+                                <#if attribute.min??>
+                                    <tr>
+                                        <td>
+                                            <b>Min</b>
+                                        </td>
+                                        <td>
+                                            ${attribute.min}
+                                        </td>
+                                    </tr>
+                                </#if>
+                                <#if attribute.max??>
+                                    <tr>
+                                        <td>
+                                            <b>Max</b>
+                                        </td>
+                                        <td>
+                                            ${attribute.max}
+                                        </td>
+                                    </tr>
+                                </#if>
+                            </table>
                         </div>
                     </#list>
                 </ul>

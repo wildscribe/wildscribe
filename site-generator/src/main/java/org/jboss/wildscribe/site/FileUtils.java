@@ -29,6 +29,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * @author Stuart Douglas
@@ -124,10 +127,25 @@ public class FileUtils {
 
 
     public static void copyDirectoryFromJar(final URL resource, final File dest) throws IOException {
+        System.out.println(resource + " ---- " + dest);
         if (resource.getProtocol().equals("file")) {
             copyDirectory(new File(resource.getFile()), dest);
         } else if (resource.getProtocol().equals("jar")) {
-            throw new RuntimeException("NYI");
+            int endIndex = resource.getFile().indexOf('!');
+            JarFile file = new JarFile(resource.getFile().substring(5, endIndex));
+            String path = resource.getPath().substring(endIndex + 2);
+            Enumeration<JarEntry> entries = file.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                if (!entry.isDirectory()) {
+                    if (entry.getName().startsWith(path)) {
+                        System.out.println(entry.getName().substring(path.length() +1));
+                        File fileDest = new File(dest, entry.getName().substring(path.length() +1));
+                        fileDest.getParentFile().mkdirs();
+                        copyFile(file.getInputStream(entry), fileDest);
+                    }
+                }
+            }
         } else {
             throw new RuntimeException("Unknown scheme " + resource.getProtocol());
         }

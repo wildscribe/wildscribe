@@ -33,6 +33,12 @@
 
     <name>Wildscribe Site Generator</name>
 
+    <properties>
+        <version.exec.plugin>1.2.1</version.exec.plugin>
+        <versions.txt.dir>${project.parent.basedir}/models/standalone/full</versions.txt.dir>
+        <output.dir>${project.basedir}/target/wildscribe-generated</output.dir>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -111,12 +117,12 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>${version.exec.plugin}</version>
                 <configuration>
-                    <executable>java</executable>
+                    <mainClass>org.jboss.wildscribe.site.Main</mainClass>
                     <arguments>
-                        <argument>-jar</argument>
-                        <argument>target/${project.build.finalName}.jar</argument>
+                        <argument>${versions.txt.dir}</argument>
+                        <argument>${output.dir}</argument>
                     </arguments>
                 </configuration>
             </plugin>

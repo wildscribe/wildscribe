@@ -114,8 +114,9 @@ public class SiteGenerator {
                     ModelNode childModel = model.get("children").get(child.getName());
                     if (childModel.hasDefined("model-description")) {
                         ModelNode newModel = childModel.get("model-description").get("*");
-
-                        createResourcePage(version, newModel, template, newPath);
+                        if(newModel.hasDefined("operations")) { //if this is not defined then something is bogus. If the managment model was 100% this would not be nessesary
+                            createResourcePage(version, newModel, template, newPath);
+                        }
                     }
                 } else {
                     for (Child registration : child.getChildren()) {

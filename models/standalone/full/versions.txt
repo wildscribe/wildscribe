@@ -1,6 +1,7 @@
 Wildfly:8.0.0.CR1:Wildfly-8.0.0.CR1.dmr
 Wildfly:8.0.0.Beta1:Wildfly-8.0.0.Beta1.dmr
 Wildfly:8.0.0.Alpha4:Wildfly-8.0.0.Alpha4.dmr
+JBoss EAP:6.2.0:JBoss-EAP-6.2.0.Final.dmr
 JBoss EAP:6.1.1:JBoss-EAP-6.1.1.Final.dmr
 JBoss EAP:6.1.0:JBoss-EAP-6.1.0.Final.dmr
 JBoss EAP:6.0.1:JBoss-EAP-6.0.1.Final.dmr

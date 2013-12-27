@@ -16,8 +16,9 @@ public class Attribute implements Comparable<Attribute> {
     private final Integer max;
     private final String accessType;
     private final String storage;
+    private final Deprecated deprecated;
 
-    public Attribute(String name, String description, String type, boolean nillable, boolean expressionsAllowed, String defaultValue, Integer min, Integer max, String accessType, String storage) {
+    public Attribute(String name, String description, String type, boolean nillable, boolean expressionsAllowed, String defaultValue, Integer min, Integer max, String accessType, String storage, Deprecated deprecated) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -28,6 +29,7 @@ public class Attribute implements Comparable<Attribute> {
         this.max = max;
         this.accessType = accessType;
         this.storage = storage;
+        this.deprecated = deprecated;
     }
 
     public String getName() {
@@ -75,6 +77,10 @@ public class Attribute implements Comparable<Attribute> {
         return storage;
     }
 
+    public Deprecated getDeprecated() {
+        return deprecated;
+    }
+
     public static Attribute fromProperty(final Property property) {
         String name = property.getName();
         String description = property.getValue().get("description").asString();
@@ -101,7 +107,7 @@ public class Attribute implements Comparable<Attribute> {
         }
         String accessType = property.getValue().get("access-type").asString();
         String storage = property.getValue().get("storage").asString();
-        Attribute op = new Attribute(name, description, type, nilable, expressionsAllowed, defaultValue, min, max, accessType, storage);
+        Attribute op = new Attribute(name, description, type, nilable, expressionsAllowed, defaultValue, min, max, accessType, storage, Deprecated.fromModel(property.getValue()));
         return op;
     }
 }

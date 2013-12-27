@@ -18,12 +18,14 @@ public class ResourceDescription {
     private final List<Child> children;
     private final List<Attribute> attributes;
     private final List<Operation> operations;
+    private final Deprecated deprecated;
 
-    public ResourceDescription(String description, List<Child> children, List<Attribute> attributes, List<Operation> operations) {
+    public ResourceDescription(String description, List<Child> children, List<Attribute> attributes, List<Operation> operations, Deprecated deprecated) {
         this.description = description;
         this.children = children;
         this.attributes = attributes;
         this.operations = operations;
+        this.deprecated = deprecated;
     }
 
 
@@ -41,6 +43,10 @@ public class ResourceDescription {
 
     public List<Operation> getOperations() {
         return operations;
+    }
+
+    public Deprecated getDeprecated() {
+        return deprecated;
     }
 
     public static ResourceDescription fromModelNode(final ModelNode node) {
@@ -68,8 +74,7 @@ public class ResourceDescription {
             Collections.sort(attributes);
         }
 
-
-        return new ResourceDescription(node.get("description").asString(), children, attributes, ops);
+        return new ResourceDescription(node.get("description").asString(), children, attributes, ops, Deprecated.fromModel(node));
 
     }
 

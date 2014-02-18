@@ -124,6 +124,12 @@
                         <argument>${versions.txt.dir}</argument>
                         <argument>${output.dir}</argument>
                     </arguments>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>url</key>
+                            <value>http://wildscribe.github.io/</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>

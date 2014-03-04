@@ -139,8 +139,8 @@ public class FileUtils {
                 JarEntry entry = entries.nextElement();
                 if (!entry.isDirectory()) {
                     if (entry.getName().startsWith(path)) {
-                        System.out.println(entry.getName().substring(path.length() +1));
-                        File fileDest = new File(dest, entry.getName().substring(path.length() +1));
+                        System.out.println(entry.getName().substring(path.length() + 1));
+                        File fileDest = new File(dest, entry.getName().substring(path.length() + 1));
                         fileDest.getParentFile().mkdirs();
                         copyFile(file.getInputStream(entry), fileDest);
                     }

@@ -14,13 +14,15 @@ public class Operation implements Comparable<Operation> {
     private final String description;
     private final String returnType;
     private final List<Parameter> parameters;
+    private final Deprecated deprecated;
 
 
-    public Operation(String name, String description, String returnType, List<Parameter> parameters) {
+    public Operation(String name, String description, String returnType, List<Parameter> parameters, Deprecated deprecated) {
         this.name = name;
         this.description = description;
         this.returnType = returnType;
         this.parameters = parameters;
+        this.deprecated = deprecated;
     }
 
     public String getName() {
@@ -37,6 +39,10 @@ public class Operation implements Comparable<Operation> {
 
     public List<Parameter> getParameters() {
         return parameters;
+    }
+
+    public Deprecated getDeprecated() {
+        return  deprecated;
     }
 
     public static Operation fromProperty(final Property property) {
@@ -68,7 +74,7 @@ public class Operation implements Comparable<Operation> {
             }
         }
 
-        Operation op = new Operation(name, description, returnType, parameters);
+        Operation op = new Operation(name, description, returnType, parameters, Deprecated.fromModel(property.getValue()));
 
         return op;
     }

@@ -6,6 +6,8 @@ import freemarker.template.TemplateExceptionHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class Main {
         }
     }
 
-    private static File initializeTemplateDir() throws IOException {
+    private static File initializeTemplateDir() throws Exception {
         File tmp = new File(System.getProperty("java.io.tmpdir") + File.separator + "wildscribe_templates");
         FileUtils.deleteRecursive(tmp);
         tmp.mkdirs();
@@ -65,16 +67,15 @@ public class Main {
         return cfg;
     }
 
-    private static void copyResources(File target) throws IOException {
+    private static void copyResources(File target) throws Exception {
         FileUtils.copyDirectoryFromJar(Main.class.getClassLoader().getResource(STATICRESOURCES), target);
     }
 
 
-    private static List<Version> loadVersions(File modelDir) {
-        final List<Version> ret = new ArrayList<Version>();
-        final String versionsString = FileUtils.readFile(new File(modelDir, VERSION));
-        final String[] versionParts = versionsString.split("\n");
-        for (final String version : versionParts) {
+    private static List<Version> loadVersions(File modelDir) throws IOException {
+        final List<Version> ret = new ArrayList<>();
+        final List<String> versions = Files.readAllLines(modelDir.toPath().resolve(VERSION), Charset.forName("UTF-8"));
+        for (final String version : versions) {
             final String[] parts = version.split(":");
             ret.add(new Version(parts[0], parts[1], new File(modelDir, parts[2])));
         }

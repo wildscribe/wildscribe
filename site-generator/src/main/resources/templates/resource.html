@@ -15,6 +15,13 @@
     </#list>
 </ol>
 
+<#if model.deprecated.deprecated>
+    <div class="alert alert-danger">
+        <strong>Deprecated</strong> Since ${model.deprecated.since}
+        <div>${model.deprecated.reason}</div>
+    </div>
+</#if>
+
 <div class="well">
     <p>${model.description}</p>
 </div>
@@ -77,6 +84,12 @@
                         </li>
 
                         <div id="operation-${attribute.name}" class="collapse">
+                            <#if attribute.deprecated.deprecated>
+                                <div class="alert alert-danger">
+                                    <strong>Deprecated</strong> Since ${attribute.deprecated.since}
+                                    <div>${attribute.deprecated.reason}</div>
+                                </div>
+                            </#if>
                             <table class="table">
                                 <thead>
                                 <tr>
@@ -165,6 +178,12 @@
                         ${op.description}
 
                         <div id="operation-${op.name}" class="collapse">
+                            <#if op.deprecated.deprecated>
+                                <div class="alert alert-danger">
+                                    <strong>Deprecated</strong> Since ${op.deprecated.since}
+                                    <div>${op.deprecated.reason}</div>
+                                </div>
+                            </#if>
                             <table class="table">
                                 <tr>
                                     <td><b>Return Type</b></td>

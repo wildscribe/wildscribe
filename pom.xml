@@ -61,7 +61,7 @@
         <version.junit>4.11</version.junit>
         <version.org.freemarker>2.3.20</version.org.freemarker>
         <version.org.jboss.dmr>1.2.0.Final</version.org.jboss.dmr>
-        <version.org.wildfly>8.0.0.Final</version.org.wildfly>
+        <version.org.wildfly>8.1.0.Final</version.org.wildfly>
 
         <!-- Surefire args -->
         <surefire.jpda.args/>

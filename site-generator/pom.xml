@@ -127,7 +127,7 @@
                     <systemProperties>
                         <systemProperty>
                             <key>url</key>
-                            <value>http://wildscribe.github.io/</value>
+                            <value>http://wildscribe.github.io</value>
                         </systemProperty>
                     </systemProperties>
                 </configuration>

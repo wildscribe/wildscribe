@@ -71,6 +71,7 @@
         <linkXRef>false</linkXRef>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
+        <version.htmlcompressor>1.4</version.htmlcompressor>
     </properties>
 
     <modules>
@@ -224,7 +225,11 @@
                 <artifactId>wildfly-controller-client</artifactId>
                 <version>${version.org.wildfly}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.googlecode.htmlcompressor</groupId>
+                <artifactId>htmlcompressor</artifactId>
+                <version>${version.htmlcompressor}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

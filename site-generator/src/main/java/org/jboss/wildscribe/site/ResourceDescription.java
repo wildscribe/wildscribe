@@ -51,8 +51,10 @@ public class ResourceDescription {
 
     public static ResourceDescription fromModelNode(final ModelNode node) {
         final List<Operation> ops = new ArrayList<Operation>();
-        for (Property i : node.get("operations").asPropertyList()) {
-            ops.add(Operation.fromProperty(i));
+        if(node.hasDefined("operations")) {
+            for (Property i : node.get("operations").asPropertyList()) {
+                ops.add(Operation.fromProperty(i));
+            }
         }
         Collections.sort(ops);
 

@@ -51,6 +51,10 @@
             <artifactId>jboss-dmr</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.googlecode.htmlcompressor</groupId>
+            <artifactId>htmlcompressor</artifactId>
+        </dependency>
         <!-- Test dependencies -->
 
         <dependency>

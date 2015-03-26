@@ -1,5 +1,6 @@
 package org.jboss.wildscribe.site;
 
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -10,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +75,7 @@ public class SiteGenerator {
 
     public void createVersions() throws IOException, TemplateException {
         for (Version version : versions) {
+            System.out.println("Processing " + version.getProduct() + " " + version.getVersion());
             createVersion(version);
         }
     }
@@ -104,7 +107,13 @@ public class SiteGenerator {
 
         File parent = new File(outputDir.getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + currentUrl);
         parent.mkdirs();
-        template.process(data, new PrintWriter(new FileOutputStream(new File(parent, INDEX_HTML))));
+        StringWriter stringWriter = new StringWriter();
+        template.process(data, stringWriter);
+        HtmlCompressor compressor = new HtmlCompressor();
+        String compressedHtml = compressor.compress(stringWriter.getBuffer().toString());
+        try (FileOutputStream stream = new FileOutputStream(new File(parent, INDEX_HTML))) {
+            stream.write(compressedHtml.getBytes("UTF-8"));
+        }
 
         if (resourceDescription.getChildren() != null) {
             for (Child child : resourceDescription.getChildren()) {

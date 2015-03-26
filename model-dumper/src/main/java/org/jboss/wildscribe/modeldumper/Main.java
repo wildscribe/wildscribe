@@ -53,8 +53,9 @@ public class Main {
     }
 
     private static ModelControllerClient connectDefault() {
+        ModelControllerClient client = null;
         try {
-            ModelControllerClient client = ModelControllerClient.Factory.create("http-remoting", "localhost", 9990);
+            client = ModelControllerClient.Factory.create("http-remoting", "localhost", 9990);
 
             final ModelNode operation = new ModelNode();
             operation.get(OP).set("read-resource-description");
@@ -64,6 +65,7 @@ public class Main {
             client.execute(operation);
             return client;
         } catch (Exception e) {
+            IoUtils.safeClose(client);
             try {
                 return ModelControllerClient.Factory.create("remote", "localhost", 9999);
             } catch (Exception e1) {

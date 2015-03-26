@@ -4,7 +4,7 @@
 </div>
 
 <ol class="breadcrumb">
-    <#list breadcrumbs as crumb>
+<#list breadcrumbs as crumb>
         <#if crumb_has_next>
             <li>
                 <a href="${urlbase}/${version.product?url}/${version.version?url}/${crumb.url?url}">${crumb.label}</a>

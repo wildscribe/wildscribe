@@ -23,7 +23,7 @@ public class Main {
                 System.out.println("USAGE: java -jar site-generator.jar model-directory output-directory");
                 System.exit(1);
             }
-            File modelDir = new File(args[0]);
+            File templateDir = initializeTemplateDir();
 
             final File target = new File(args[1]);
             FileUtils.deleteRecursive(target);
@@ -31,17 +31,21 @@ public class Main {
             System.out.print("Generating site in " + target.getAbsolutePath());
 
             copyResources(target);
-
-            List<Version> versions = loadVersions(modelDir);
-
-            File templateDir = initializeTemplateDir();
-
             Configuration configuration = createFreemarkerConfig(templateDir);
 
-            SiteGenerator siteGenerator = new SiteGenerator(versions, configuration, target);
-            siteGenerator.createMainPage();
-            siteGenerator.createAboutPage();
-            siteGenerator.createVersions();
+            File modelDir = new File(args[0]);
+
+            if(modelDir.isDirectory()) {
+
+                List<Version> versions = loadVersions(modelDir);
+                SiteGenerator siteGenerator = new SiteGenerator(versions, configuration, target);
+                siteGenerator.createMainPage();
+                siteGenerator.createAboutPage();
+                siteGenerator.createVersions();
+            } else {
+                SiteGenerator siteGenerator = new SiteGenerator(modelDir, configuration, target);
+                siteGenerator.createSingleVersion();
+            }
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -26,8 +26,9 @@ public class SiteGenerator {
 
     public static final String INDEX_HTML = "index.html";
     public static final String ABOUT_HTML = "about.html";
-    public static final String LAYOUT_HTML = "layout.html";
     public static final String RESOURCE_HTML = "resource.html";
+    public final String layoutHtml;
+    private final File singlePageDmr;
     private final List<Version> versions;
     private final Configuration configuration;
     private final File outputDir;
@@ -36,10 +37,20 @@ public class SiteGenerator {
         this.versions = versions;
         this.configuration = configuration;
         this.outputDir = outputDir;
+        layoutHtml = "layout.html";
+        this.singlePageDmr = null;
+    }
+
+    public SiteGenerator(File single, Configuration configuration, File outputDir) {
+        this.versions = null;
+        this.configuration = configuration;
+        this.outputDir = outputDir;
+        layoutHtml = "single-layout.html";
+        this.singlePageDmr = single;
     }
 
     public void createMainPage() throws IOException, TemplateException {
-        Template template = configuration.getTemplate(LAYOUT_HTML);
+        Template template = configuration.getTemplate(layoutHtml);
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", INDEX_HTML);
         data.put("versions", versions);
@@ -64,7 +75,7 @@ public class SiteGenerator {
     }
 
     public void createAboutPage() throws IOException, TemplateException {
-        Template template = configuration.getTemplate(LAYOUT_HTML);
+        Template template = configuration.getTemplate(layoutHtml);
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", ABOUT_HTML);
         data.put("versions", versions);
@@ -85,13 +96,22 @@ public class SiteGenerator {
         model.readExternal(new FileInputStream(version.getDmrFile()));
 
 
-        Template template = configuration.getTemplate(LAYOUT_HTML);
+        Template template = configuration.getTemplate(layoutHtml);
 
-        createResourcePage(version, model, template);
+        createResourcePage(version, model, template, false);
 
     }
 
-    private void createResourcePage(Version version, ModelNode model, Template template, PathElement... path) throws TemplateException, IOException {
+    public void createSingleVersion() throws IOException, TemplateException {
+        final ModelNode model = new ModelNode();
+        model.readExternal(new FileInputStream(singlePageDmr));
+        Template template = configuration.getTemplate(layoutHtml);
+        createResourcePage(new Version(System.getProperty("name"), "", singlePageDmr), model,template, true);
+
+    }
+
+
+    private void createResourcePage(Version version, ModelNode model, Template template, boolean single, PathElement... path) throws TemplateException, IOException {
         final String currentUrl = buildCurrentUrl(path);
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", RESOURCE_HTML);
@@ -105,7 +125,12 @@ public class SiteGenerator {
         final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path);
         data.put("breadcrumbs", crumbs);
 
-        File parent = new File(outputDir.getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + currentUrl);
+        File parent;
+        if(single) {
+            parent = new File(outputDir.getAbsolutePath() + File.separator + currentUrl);
+        } else {
+            parent = new File(outputDir.getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + currentUrl);
+        }
         parent.mkdirs();
         StringWriter stringWriter = new StringWriter();
         template.process(data, stringWriter);
@@ -124,7 +149,7 @@ public class SiteGenerator {
                     if (childModel.hasDefined("model-description")) {
                         ModelNode newModel = childModel.get("model-description").get("*");
                         if(newModel.hasDefined("operations")) { //if this is not defined then something is bogus. If the managment model was 100% this would not be nessesary
-                            createResourcePage(version, newModel, template, newPath);
+                            createResourcePage(version, newModel, template, single, newPath);
                         }
                     }
                 } else {
@@ -135,7 +160,7 @@ public class SiteGenerator {
                         if (childModel.hasDefined("model-description") &&  childModel.get("model-description").hasDefined(registration.getName())) {
                             ModelNode newModel = childModel.get("model-description").get(registration.getName());
 
-                            createResourcePage(version, newModel, template, newPath);
+                            createResourcePage(version, newModel, template, single, newPath);
                         }
                     }
                 }

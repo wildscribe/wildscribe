@@ -24,11 +24,24 @@ public class Main {
     public static void main(final String[] args) {
 
         if(args.length != 1) {
-            System.out.println("USAGE: java -jar model-dumper.jar target-file");
+            System.out.println("USAGE: java -jar model-dumper.jar [-Dpath=dump-path-in-cli-format] target-file");
             System.exit(1);
         }
 
         ModelControllerClient client = connectDefault();
+
+        ModelNode addr = new ModelNode();
+        String address = System.getProperty("path");
+        if(address != null) {
+            String[] parts = address.split("/");
+            for(String p : parts) {
+                String[] kv = p.split("=");
+                if(kv.length != 2) {
+                    throw new RuntimeException("invalid address " + address);
+                }
+                addr.add(kv[0], kv[1]);
+            }
+        }
 
         try {
 
@@ -38,7 +51,7 @@ public class Main {
             operation.get(OP).set("read-resource-description");
             operation.get(RECURSIVE).set(true);
             operation.get("operations").set(true);
-            operation.get(OP_ADDR).set(new ModelNode());
+            operation.get(OP_ADDR).set(addr);
             try {
                 ModelNode result = executeForResult(client, operation);
                 result.writeExternal(new DataOutputStream(out));

@@ -24,7 +24,7 @@ public class Main {
     public static void main(final String[] args) {
 
         if(args.length != 1) {
-            System.out.println("USAGE: java -jar model-dumper.jar [-Dpath=dump-path-in-cli-format] target-file");
+            System.out.println("USAGE: java [-Dpath=dump-path-in-cli-format] -jar model-dumper.jar target-file");
             System.exit(1);
         }
 

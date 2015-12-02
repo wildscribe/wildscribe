@@ -20,14 +20,20 @@ public class Main {
     public static void main(final String[] args) {
         try {
             if (args.length != 2) {
-                System.out.println("USAGE: java [-Durl=http://wildscribe.github.io/] -jar site-generator.jar model-directory output-directory");
+                System.out.println("USAGE: java [-Durl=http://wildscribe.github.io] -jar site-generator.jar model-directory output-directory");
                 System.exit(1);
             }
             File templateDir = initializeTemplateDir();
 
             final File target = new File(args[1]);
-            FileUtils.deleteRecursive(target);
             target.mkdirs();
+            for(String file : target.list()) {
+                if(file.startsWith(".")) {
+                    continue;
+                }
+                File sub = new File(target, file);
+                FileUtils.deleteRecursive(sub);
+            }
             System.out.print("Generating site in " + target.getAbsolutePath());
 
             copyResources(target);

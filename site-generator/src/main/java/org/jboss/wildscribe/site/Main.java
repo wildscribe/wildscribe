@@ -20,7 +20,7 @@ public class Main {
     public static void main(final String[] args) {
         try {
             if (args.length != 2) {
-                System.out.println("USAGE: java -jar site-generator.jar model-directory output-directory");
+                System.out.println("USAGE: java [-Durl=http://wildscribe.github.io/] -jar site-generator.jar model-directory output-directory");
                 System.exit(1);
             }
             File templateDir = initializeTemplateDir();

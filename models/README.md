@@ -8,17 +8,10 @@ servers. These diffs are generated against the standalone-full-ha.xml profile, w
 This data allows the Wildscribe pages to be generated offline, without a running server instance. It also means that at some
 stage it should be possible to generate diff's of the models.
 
-Add the XTS subsystem
+Add additional subsystems
 =====================
-Add the following to standalone-full-ha.xml:
 
-  <extension module="org.jboss.as.xts"/>
-
-  <subsystem xmlns="urn:jboss:domain:xts:2.0">
-      <host name="default-host"/>
-      <xts-environment url="http://${jboss.bind.address:127.0.0.1}:8080/ws-c11/ActivationService"/>
-      <default-context-propagation enabled="true"/>
-  </subsystem>
+$JBOSS_HOME/bin/jboss-cli.sh -c --commands=/extension=org.wildfly.extension.rts:add,/extension=org.jboss.as.xts:add,/extension=org.wildfly.extension.picketlink:add
 
 Dumping models
 =======================

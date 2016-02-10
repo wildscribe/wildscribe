@@ -7,3 +7,27 @@ servers. These diffs are generated against the standalone-full-ha.xml profile, w
 
 This data allows the Wildscribe pages to be generated offline, without a running server instance. It also means that at some
 stage it should be possible to generate diff's of the models.
+
+Add the XTS subsystem
+=====================
+Add the following to standalone-full-ha.xml:
+
+  <extension module="org.jboss.as.xts"/>
+
+  <subsystem xmlns="urn:jboss:domain:xts:2.0">
+      <host name="default-host"/>
+      <xts-environment url="http://${jboss.bind.address:127.0.0.1}:8080/ws-c11/ActivationService"/>
+      <default-context-propagation enabled="true"/>
+  </subsystem>
+
+Dumping models
+=======================
+To dump models:
+
+ - Start the version of the server from which you wish to dump models.
+ - Execute the model-dumper: 
+    $ java -jar model-dumper/target/model-dumper.jar models/standalone/Wildfly-XYZ.Final.dmr
+   
+   Where XYZ is the version of the running server (for example 10.0.0-Final for Wildfly-10.0.0-Final). Output will be in models/standalone/ with the specified filename (Wildfly-XYZ.Final.dmr).
+
+Note: Generation of the model may result in out-of-memory. Edit $WILDFLY_HOME/bin/standalone.conf, and increase the max heap (-Xmx) in JAVA_OPTS, and restart the server.

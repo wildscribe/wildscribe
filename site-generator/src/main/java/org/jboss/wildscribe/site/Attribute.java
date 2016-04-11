@@ -17,8 +17,9 @@ public class Attribute implements Comparable<Attribute> {
     private final String accessType;
     private final String storage;
     private final Deprecated deprecated;
+    private final String unit;
 
-    public Attribute(String name, String description, String type, boolean nillable, boolean expressionsAllowed, String defaultValue, Integer min, Integer max, String accessType, String storage, Deprecated deprecated) {
+    public Attribute(String name, String description, String type, boolean nillable, boolean expressionsAllowed, String defaultValue, Integer min, Integer max, String accessType, String storage, Deprecated deprecated, String unit) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -30,6 +31,7 @@ public class Attribute implements Comparable<Attribute> {
         this.accessType = accessType;
         this.storage = storage;
         this.deprecated = deprecated;
+        this.unit = unit;
     }
 
     public String getName() {
@@ -81,6 +83,10 @@ public class Attribute implements Comparable<Attribute> {
         return deprecated;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
     public static Attribute fromProperty(final Property property) {
         String name = property.getName();
         String description = property.getValue().get("description").asString();
@@ -107,7 +113,11 @@ public class Attribute implements Comparable<Attribute> {
         }
         String accessType = property.getValue().get("access-type").asString();
         String storage = property.getValue().get("storage").asString();
-        Attribute op = new Attribute(name, description, type, nilable, expressionsAllowed, defaultValue, min, max, accessType, storage, Deprecated.fromModel(property.getValue()));
+        String unit = null;
+        if (property.getValue().hasDefined("unit")) {
+            unit = property.getValue().get("unit").asString();
+        }
+        Attribute op = new Attribute(name, description, type, nilable, expressionsAllowed, defaultValue, min, max, accessType, storage, Deprecated.fromModel(property.getValue()), unit);
         return op;
     }
 }

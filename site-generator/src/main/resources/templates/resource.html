@@ -151,6 +151,16 @@
                                         </td>
                                     </tr>
                                 </#if>
+                                <#if attribute.unit??>
+                                    <tr>
+                                        <td>
+                                            <b>Unit</b>
+                                        </td>
+                                        <td>
+                                            ${attribute.unit}
+                                        </td>
+                                    </tr>
+                                </#if>
                             </table>
                         </div>
                     </#list>

@@ -26,6 +26,7 @@
         <groupId>org.jboss.wildscribe</groupId>
         <artifactId>wildscribe-parent</artifactId>
         <version>1.0.0.Alpha1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>wildscribe-site-generator</artifactId>

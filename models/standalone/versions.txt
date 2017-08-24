@@ -1,8 +1,10 @@
+Wildfly:10.1.0:Wildfly-10.1.0.Final.dmr
 Wildfly:10.0.0.Final:Wildfly-10.0.0.Final.dmr
 Wildfly:9.0.0.Final:Wildfly-9.0.0.Final.dmr
 Wildfly:8.2.0.Final:Wildfly-8.2.0.Final.dmr
 Wildfly:8.1.0.Final:Wildfly-8.1.0.Final.dmr
 Wildfly:8.0.0.Final:Wildfly-8.0.0.Final.dmr
+JBoss EAP:7.0.0:JBoss-EAP-7.0.0.GA.dmr
 JBoss EAP:6.4.0:JBoss-EAP-6.4.0.Final.dmr
 JBoss EAP:6.3.0:JBoss-EAP-6.3.0.Final.dmr
 JBoss EAP:6.2.0:JBoss-EAP-6.2.0.Final.dmr

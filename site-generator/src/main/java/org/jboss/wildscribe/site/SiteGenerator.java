@@ -1,11 +1,5 @@
 package org.jboss.wildscribe.site;
 
-import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import org.jboss.dmr.ModelNode;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,6 +10,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.jboss.dmr.ModelNode;
 
 /**
  * class Responsible for generating sites
@@ -56,21 +56,29 @@ public class SiteGenerator {
         data.put("versions", versions);
         data.put("urlbase", getUrlBase());
         boolean wf = false;
-        boolean eap = false;
+        boolean eap6 = false;
         boolean as7 = false;
+        assert versions != null;
+
+        Version eap7 = versions.stream().filter(version -> version.getProduct().equals(Version.JBOSS_EAP))
+                .filter(version -> version.getVersion().startsWith("7"))
+                .findFirst().get();
+        data.put("eap7", eap7);
+
         for (Version version : versions) {
             if (version.getProduct().equals(Version.JBOSS_AS7) && !as7) {
                 as7 = true;
                 data.put("as7", version);
-            } else if (version.getProduct().equals(Version.JBOSS_EAP) && !eap) {
-                eap = true;
-                data.put("eap", version);
+            } else if (version.getProduct().equals(Version.JBOSS_EAP) && !eap6) {
+                if (version.getVersion().startsWith("6")) {
+                    eap6 = true;
+                    data.put("eap6", version);
+                }
             } else if (version.getProduct().equals(Version.WILDFLY) && !wf) {
                 wf = true;
                 data.put("wildfly", version);
             }
         }
-
         template.process(data, new PrintWriter(new FileOutputStream(new File(outputDir, INDEX_HTML))));
     }
 

@@ -35,4 +35,11 @@ public final class Version {
         return dmrFile;
     }
 
+    @Override
+    public String toString() {
+        return "Version{" +
+                "product='" + product + '\'' +
+                ", version='" + version + '\'' +
+                '}';
+    }
 }

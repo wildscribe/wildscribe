@@ -24,7 +24,8 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>12</version>
+        <version>24</version>
+        <relativePath/>
     </parent>
 
     <groupId>org.jboss.wildscribe</groupId>
@@ -60,8 +61,8 @@
          -->
         <version.junit>4.11</version.junit>
         <version.org.freemarker>2.3.20</version.org.freemarker>
-        <version.org.jboss.dmr>1.2.0.Final</version.org.jboss.dmr>
-        <version.org.wildfly>8.1.0.Final</version.org.wildfly>
+        <version.org.jboss.dmr>1.4.0.Final</version.org.jboss.dmr>
+        <version.org.wildfly.core>2.1.0.Final</version.org.wildfly.core>
 
         <!-- Surefire args -->
         <surefire.jpda.args/>
@@ -69,8 +70,6 @@
 
         <!-- Checkstyle configuration -->
         <linkXRef>false</linkXRef>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
         <version.htmlcompressor>1.4</version.htmlcompressor>
     </properties>
 
@@ -196,7 +195,7 @@
 
             <dependency>
                 <groupId>org.jboss.wildscribe</groupId>
-                <artifactId>model-dumper</artifactId>
+                <artifactId>wildscribe-model-dumper</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -221,9 +220,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.wildfly</groupId>
+                <groupId>org.wildfly.core</groupId>
                 <artifactId>wildfly-controller-client</artifactId>
-                <version>${version.org.wildfly}</version>
+                <version>${version.org.wildfly.core}</version>
             </dependency>
             <dependency>
                 <groupId>com.googlecode.htmlcompressor</groupId>

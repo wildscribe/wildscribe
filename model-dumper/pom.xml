@@ -26,6 +26,7 @@
         <groupId>org.jboss.wildscribe</groupId>
         <artifactId>wildscribe-parent</artifactId>
         <version>1.0.0.Alpha1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>wildscribe-model-dumper</artifactId>
@@ -36,7 +37,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.wildfly</groupId>
+            <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-controller-client</artifactId>
         </dependency>
 
@@ -106,7 +107,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
                 <configuration>
                     <executable>java</executable>
                     <arguments>

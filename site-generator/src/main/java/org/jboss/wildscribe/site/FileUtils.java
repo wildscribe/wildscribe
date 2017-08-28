@@ -23,12 +23,19 @@ import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.CopyOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -87,49 +94,16 @@ public class FileUtils {
         }
     }
 
-
-    public static File getFileOrCheckParentsIfNotFound(String baseStr, String path) throws FileNotFoundException {
-        //File f = new File( System.getProperty("jbossas.project.dir", "../../..") );
-        File base = new File(baseStr);
-        if (!base.exists()) {
-            throw new FileNotFoundException("Base path not found: " + base.getPath());
-        }
-        base = base.getAbsoluteFile();
-
-        File f = new File(base, path);
-        if (f.exists())
-            return f;
-
-        File fLast = f;
-        while (!f.exists()) {
-            int slash = path.lastIndexOf(File.separatorChar);
-            if (slash <= 0)  // no slash or "/xxx"
-                throw new FileNotFoundException("Path not found: " + f.getPath());
-            path = path.substring(0, slash);
-            fLast = f;
-            f = new File(base, path);
-        }
-        // When first existing is found, report the last non-existent.
-        throw new FileNotFoundException("Path not found: " + fLast.getPath());
-    }
-
-    public static void copyDirectory(final File src, final File dest) throws IOException {
-        String[] files = src.list();
-        for (String f : files) {
-            File current = new File(src, f);
-            if (current.isDirectory()) {
-                copyDirectory(current, new File(dest, f));
-            } else {
-                copyFile(current, new File(dest, f));
-            }
-        }
+    public static void copyDirectory(final Path src, final Path dest) throws IOException {
+        Files.walkFileTree(src, new CopyDirVisitor(src, dest, StandardCopyOption.REPLACE_EXISTING));
     }
 
 
-    public static void copyDirectoryFromJar(final URL resource, final File dest) throws IOException {
+    public static void copyDirectoryFromJar(final URL resource, final Path dest) throws Exception {
         System.out.println(resource + " ---- " + dest);
         if (resource.getProtocol().equals("file")) {
-            copyDirectory(new File(resource.getFile()), dest);
+
+            copyDirectory(Paths.get(resource.toURI()), dest);
         } else if (resource.getProtocol().equals("jar")) {
             int endIndex = resource.getFile().indexOf('!');
             JarFile file = new JarFile(resource.getFile().substring(5, endIndex));
@@ -140,9 +114,11 @@ public class FileUtils {
                 if (!entry.isDirectory()) {
                     if (entry.getName().startsWith(path)) {
                         System.out.println(entry.getName().substring(path.length() + 1));
-                        File fileDest = new File(dest, entry.getName().substring(path.length() + 1));
-                        fileDest.getParentFile().mkdirs();
-                        copyFile(file.getInputStream(entry), fileDest);
+                        Path fileDest = dest.resolve(entry.getName().substring(path.length() + 1));
+                        if (Files.notExists(fileDest.getParent())) {
+                            Files.createDirectory(fileDest.getParent());
+                        }
+                        Files.copy(file.getInputStream(entry), fileDest);
                     }
                 }
             }
@@ -171,6 +147,33 @@ public class FileUtils {
             }
         } finally {
             close(out);
+        }
+    }
+
+    public static class CopyDirVisitor extends SimpleFileVisitor<Path> {
+        private final Path fromPath;
+        private final Path toPath;
+        private final CopyOption copyOption;
+
+        public CopyDirVisitor(Path fromPath, Path toPath, CopyOption copyOption) {
+            this.fromPath = fromPath;
+            this.toPath = toPath;
+            this.copyOption = copyOption;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            Path targetPath = toPath.resolve(fromPath.relativize(dir));
+            if (!Files.exists(targetPath)) {
+                Files.createDirectory(targetPath);
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            Files.copy(file, toPath.resolve(fromPath.relativize(file)), copyOption);
+            return FileVisitResult.CONTINUE;
         }
     }
 

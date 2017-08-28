@@ -60,7 +60,6 @@ public class Main {
                 ModelNode result = executeForResult(client, operation);
                 result.get("possible-capabilities").set(getPossibleCapabilites(client));
                 result.get("version-info").set(getVersionInfo(client));
-                
                 result.writeExternal(new DataOutputStream(out));
                 //result.writeString(new PrintWriter(Files.newBufferedWriter(Paths.get("c:\\temp\\test.dmr"))), false);
             } catch (IOException e) {

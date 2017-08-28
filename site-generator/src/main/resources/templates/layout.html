@@ -1,30 +1,24 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>
-<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>
-<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>
-<html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js"> <!--<![endif]-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wildfly Model Reference</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-
-    <link rel="stylesheet" href="${urlbase}/css/bootstrap.min.css">
+    <base href="${urlbase}" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
         body {
             padding-top: 50px;
             padding-bottom: 20px;
         }
     </style>
-    <link rel="stylesheet" href="${urlbase}/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="${urlbase}/css/main.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/main.css">
 
-    <script src="${urlbase}/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="js/vendor/modernizr-custom.js"></script>
 </head>
 <body>
 <!--[if lt IE 7]>
@@ -40,24 +34,24 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="${urlbase}/index.html">Wildfly Model Reference</a>
+            <a class="navbar-brand" href="index.html">Wildfly Model Reference</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="${(page == 'index.html')?string('active', '')}"><a href="${urlbase}/index.html">Home</a></li>
+                <li class="${(page == 'index.html')?string('active', '')}"><a href="index.html">Home</a></li>
                 <li class="dropdown ${(version??)?string('active', '')}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Versions<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <#list versions as v>
                             <li class=" ${(version?? && version.product==v.product && version.version==v.version)?string('active','')}">
-                                <a href="${urlbase}/${v.product?url}/${v.version?url}/index.html">${v.product}
+                                <a href="${v.product?url}/${v.version?url}/index.html">${v.product}
                                 ${v.version}</a></li>
                         </#list>
                     </ul>
                 </li>
                 <li><a href="http://www.jboss.com">Get JBoss EAP</a></li>
                 <li><a href="http://www.wildfly.org">Get Wildfly</a></li>
-                <li class="${(page == 'about.html')?string('active', '')}"><a href="${urlbase}/about.html">About</a></li>
+                <li class="${(page == 'about.html')?string('active', '')}"><a href="about.html">About</a></li>
 
             </ul>
         </div>
@@ -74,12 +68,12 @@
     </footer>
 </div>
 <!-- /container -->
-<script src="${urlbase}/js/vendor/jquery-1.10.1.min.js"></script>
-<script>window.jQuery || document.write('<script src="${urlbase}/js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+<script src="js/vendor/jquery-1.12.4.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.4.min.js"><\/script>')</script>
 
-<script src="${urlbase}/js/vendor/bootstrap.min.js"></script>
+<script src="js/vendor/bootstrap.min.js"></script>
 
-<script src="${urlbase}/js/main.js"></script>
+<script src="js/main.js"></script>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

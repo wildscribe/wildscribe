@@ -17,6 +17,3 @@ dd {
 }
 dl:after {content:"";display:table;clear:both;}
 
-.capabilities{
-    max-width: 60%;
-}

@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,16 +27,19 @@ public class Main {
             }
             File templateDir = initializeTemplateDir();
 
-            final File target = new File(args[1]);
-            target.mkdirs();
-            for(String file : target.list()) {
+            final Path target = Paths.get(args[1]);
+            if (Files.notExists(target)){
+                Files.createDirectories(target);
+            }
+
+            for(String file : target.toFile().list()) {
                 if(file.startsWith(".")) {
                     continue;
                 }
-                File sub = new File(target, file);
-                FileUtils.deleteRecursive(sub);
+                Path sub = target.resolve(file);
+                FileUtils.deleteRecursive(sub.toFile());
             }
-            System.out.print("Generating site in " + target.getAbsolutePath());
+            System.out.print("Generating site in " + target.toString());
 
             copyResources(target);
             Configuration configuration = createFreemarkerConfig(templateDir);
@@ -42,7 +47,6 @@ public class Main {
             File modelDir = new File(args[0]);
 
             if(modelDir.isDirectory()) {
-
                 List<Version> versions = loadVersions(modelDir);
                 SiteGenerator siteGenerator = new SiteGenerator(versions, configuration, target);
                 siteGenerator.createMainPage();
@@ -62,7 +66,7 @@ public class Main {
         File tmp = new File(System.getProperty("java.io.tmpdir") + File.separator + "wildscribe_templates");
         FileUtils.deleteRecursive(tmp);
         tmp.mkdirs();
-        FileUtils.copyDirectoryFromJar(Main.class.getClassLoader().getResource(TEMPLATES), tmp);
+        FileUtils.copyDirectoryFromJar(Main.class.getClassLoader().getResource(TEMPLATES), tmp.toPath());
         return tmp;
     }
 
@@ -77,7 +81,7 @@ public class Main {
         return cfg;
     }
 
-    private static void copyResources(File target) throws Exception {
+    private static void copyResources(Path target) throws Exception {
         FileUtils.copyDirectoryFromJar(Main.class.getClassLoader().getResource(STATICRESOURCES), target);
     }
 

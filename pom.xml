@@ -60,8 +60,8 @@
             For example: <version.org.jboss.as.console>
          -->
         <version.junit>4.11</version.junit>
-        <version.org.freemarker>2.3.20</version.org.freemarker>
-        <version.org.jboss.dmr>1.4.0.Final</version.org.jboss.dmr>
+        <version.org.freemarker>2.3.26-incubating</version.org.freemarker>
+        <version.org.jboss.dmr>1.4.1.Final</version.org.jboss.dmr>
         <version.org.wildfly.core>2.1.0.Final</version.org.wildfly.core>
 
         <!-- Surefire args -->

@@ -1,16 +1,22 @@
 
-.resource-header {
+.resource-header, a {
     cursor: pointer;
 }
 
+dt {
+    float: left;
+    width: 30%;
+    text-align: right;
+    padding: .25em;
+    clear: left;
+}
+dd {
+    float: left;
+    width: 60%;
+    padding: .25em 0;
+}
+dl:after {content:"";display:table;clear:both;}
 
-
-
-
-
-
-
-
-
-
-
+.capabilities{
+    max-width: 60%;
+}

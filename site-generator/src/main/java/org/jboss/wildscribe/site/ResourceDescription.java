@@ -66,7 +66,7 @@ public class ResourceDescription {
         return "runtime-only".equals(storage);
     }
 
-    public static ResourceDescription fromModelNode(final ModelNode node, Map<String, Capability> capabilities) {
+    public static ResourceDescription fromModelNode(PathAddress pathElements, final ModelNode node, Map<String, Capability> capabilities) {
         final List<Operation> ops = new ArrayList<Operation>();
         if(node.hasDefined("operations")) {
             for (Property i : node.get("operations").asPropertyList()) {
@@ -94,7 +94,7 @@ public class ResourceDescription {
         }
         String storage = node.get("storage").asString("configuration");
 
-        return new ResourceDescription(node.get("description").asString(), children, attributes, ops, Deprecated.fromModel(node), Capability.fromModelList(node.get("capabilities"), capabilities), storage);
+        return new ResourceDescription(node.get("description").asString(), children, attributes, ops, Deprecated.fromModel(node), Capability.fromModelList(node.get("capabilities"), capabilities, pathElements), storage);
 
     }
 

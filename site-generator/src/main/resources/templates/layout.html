@@ -2,78 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Wildfly Model Reference</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <#if version??>
+        <title>${version.product} ${version.version} Model Reference</title>
+        <#else>
+            <title>WildFly Model Reference</title>
+    </#if>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
     <base href="${urlbase}" />
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <style>
-        body {
-            padding-top: 50px;
-            padding-bottom: 20px;
-        }
-    </style>
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="css/main.css">
-
-    <script src="js/vendor/modernizr-custom.js"></script>
 </head>
 <body>
-<!--[if lt IE 7]>
-<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
-    your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to
-    improve your experience.</p>
-<![endif]-->
-<div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="index.html">Wildfly Model Reference</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="${(page == 'index.html')?string('active', '')}"><a href="index.html">Home</a></li>
-                <li class="dropdown ${(version??)?string('active', '')}">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Versions<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <#list versions as v>
-                            <li class=" ${(version?? && version.product==v.product && version.version==v.version)?string('active','')}">
-                                <a href="${v.product?url}/${v.version?url}/index.html">${v.product}
-                                ${v.version}</a></li>
-                        </#list>
+        <div class="masthead">
+            <#if version??>
+                <h3 class="text-muted">${version.product} ${version.version} Model Reference</h3>
+                <#else>
+                <h3 class="text-muted">WildFly  Model Reference</h3>
+            </#if>
+
+            <nav class="navbar navbar-expand-md navbar-light bg-light rounded mb-3">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav text-md-center nav-justified w-100">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <!--li class="nav-item ${(page == 'index.html')?string('active', '')}"><a class="nav-link"  href="index.html">Home</a></li-->
+                        <li class="nav-item dropdown ${(version??)?string('active', '')}">
+                            <a href="#" class="nav-link dropdown-toggle" id="versions" data-toggle="dropdown" aria-haspopup="true"
+                                                           aria-expanded="false">Versions</a>
+                            <div class="dropdown-menu" aria-labelledby="versions">
+                                <#list versions as v>
+                                    <a class="dropdown-item ${(version?? && version.product==v.product && version.version==v.version)?string('active','')}"
+                                       href="${v.product?url}/${v.version?url}/index.html">
+                                        ${v.product} ${v.version}</a>
+                                </#list>
+                            </div>
+                        </li>
+                        <li class="nav-item"><a class="nav-link"  href="http://www.jboss.com">Get JBoss EAP</a></li>
+                        <li class="nav-item"><a class="nav-link"  href="http://www.wildfly.org">Get WildFly</a></li>
+                        <li class="nav-item ${(page == 'about.html')?string('active', '')}"><a class="nav-link" href="about.html">About</a></li>
                     </ul>
-                </li>
-                <li><a href="http://www.jboss.com">Get JBoss EAP</a></li>
-                <li><a href="http://www.wildfly.org">Get Wildfly</a></li>
-                <li class="${(page == 'about.html')?string('active', '')}"><a href="about.html">About</a></li>
-
-            </ul>
+                </div>
+            </nav>
         </div>
-        <!--/.navbar-collapse -->
+
+        <#include page/>
+
+        <footer class="footer">
+            <p>&copy; Red Hat Pty Ltd 2017</p>
+        </footer>
     </div>
-</div>
 
-<#include page/>
-<div class="container">
-    <hr>
 
-    <footer>
-        <p>&copy; Red Hat Pty Ltd 2017</p>
-    </footer>
 </div>
 <!-- /container -->
-<script src="js/vendor/jquery-1.12.4.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.4.min.js"><\/script>')</script>
+<script src="js/vendor/jquery-3.2.1.slim.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.slim.min.js"><\/script>')</script>
 
+<script src="js/vendor/popper.min.js"></script>
 <script src="js/vendor/bootstrap.min.js"></script>
-
 <script src="js/main.js"></script>
+<script src="js/vendor/ie10-viewport-bug-workaround.js"></script>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -63,7 +63,7 @@ public class SingleVersionGenerator {
         Map<String, Capability> capabilityMap = new TreeMap<>();
         if (capabilitiesModel.isDefined()) {
             capabilitiesModel.asList().forEach(cap -> {
-                Capability capability = Capability.fromModel(cap, Collections.emptyMap());
+                Capability capability = Capability.fromModel(cap, Collections.emptyMap(), null);
                 capabilityMap.put(capability.getName(), capability);
             });
         }
@@ -79,12 +79,13 @@ public class SingleVersionGenerator {
         data.put("version", version);
         data.put("urlbase", getUrlBase());
         data.put("currenturl", currentUrl);
+        data.put("globalCapabilities", capabilities);
         if (single) {
             data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
         } else {
             data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
         }
-        ResourceDescription resourceDescription = ResourceDescription.fromModelNode(model, capabilities);
+        ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
         data.put("model", resourceDescription);
 
         final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path);

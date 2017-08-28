@@ -1,16 +1,11 @@
-<div class="container">
-<div class="page-header">
-    <h1>${version.product} ${version.version} Model Reference</h1>
-</div>
-
 <ol class="breadcrumb">
 <#list breadcrumbs as crumb>
         <#if crumb_has_next>
-            <li>
+            <li class="breadcrumb-item">
                 <a href="${version.product?url}/${version.version?url}/${crumb.url}">${crumb.label}</a>
             </li>
             <#else>
-                <li class="active">${crumb.label}</li>
+                <li class="breadcrumb-item active">${crumb.label}</li>
         </#if>
     </#list>
 </ol>
@@ -35,25 +30,21 @@
 <#if model.children?size != 0>
 <div class="page-header">
 
-    <h3 class="resource-header" data-toggle="collapse" data-target="#children">Children
-        (${model.children?size})</h3>
+    <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#children">Children (${model.children?size})</h4>
 
-    <div class="collapse in" id="children">
+    <div class="collapse show" id="children">
         <ul>
             <#list model.children as child>
                 <li>
 
                     <#if child.children?size == 0>
                         <#noautoesc>
-                        <a href="${version.product?url}/${version.version?url}${currenturl}/${child.name}/index.html">
-                            ${child.name}
-                        </a>
+                        <a href="${version.product?url}/${version.version?url}${currenturl}/${child.name}/index.html">${child.name}</a>
                         </#noautoesc>
                         <#else>
                             <b>${child.name}</b>
                     </#if>
                     ${child.description}
-
                 </li>
                 <#if child.children?size != 0>
                     <ul>
@@ -77,14 +68,14 @@
 <#if model.capabilities?size != 0>
     <div class="page-header">
 
-        <h3 class="resource-header" data-toggle="collapse" data-target="#capabilities">Provided capabilities(${model.capabilities?size})</h3>
-        <div class="collapse in table-responsive capabilities" id="capabilities">
+        <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#capabilities">Provided capabilities(${model.capabilities?size})</h4>
+        <div class="collapse show table-responsive capabilities" id="capabilities">
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Name</th>
                     <th>Dynamic</th>
-                    <th>Provider points</th>
+                    <th>Other provider points</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -93,9 +84,12 @@
                         <td><a href="${cap.capabilityDescriptionUrl}">${cap.name}</a></td>
                         <td>${cap.dynamic?c}</td>
                         <td>
+                            <#if cap.providerPointsUrls?has_content >
                             <#list cap.providerPointsUrls as capName,capUrl>
                                 <a href="${productHomeUrl}/${capUrl}index.html">${capName}</a> <br/>
                             </#list>
+                                <#else><p>none</p>
+                            </#if>
                         </td>
                     </tr>
                 </#list>
@@ -109,14 +103,14 @@
 
     <div class="page-header">
 
-        <h3 class="resource-header" data-toggle="collapse" data-target="#attributes">Attributes
-            (${model.attributes?size})</h3>
-        <div class="collapse in" id="attributes">
+        <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#attributes">Attributes
+            (${model.attributes?size})</h4>
+        <div class="collapse show" id="attributes">
             <div class="panel">
                 <ul>
                     <#list model.attributes as attribute>
                         <li>
-                            <a data-toggle="collapse" data-target="#attribute-${attribute.name}">
+                            <a href="#" data-toggle="collapse" data-target="#attribute-${attribute.name}">
                                 ${attribute.name}
                             </a>
                             ${attribute.description}
@@ -130,7 +124,7 @@
                                 </div>
                             </#if>
                             <div class="table-responsive">
-                            <table class="table table-striped">
+                            <table class="table table-striped table-hover">
                                 <thead>
                                 <tr>
                                     <th>Attribute</th>
@@ -153,7 +147,20 @@
                                             <b>Capability reference</b>
                                         </td>
                                         <td>
-                                            ${attribute.capabilityReference}
+                                            <#if globalCapabilities[attribute.capabilityReference]??>
+                                            <button tabindex="0" type="button" class="btn btn-link" data-toggle="popover-provider-points" data-target="#popover-${attribute.name}-body" data-trigger="focus" title="Provider points" >${attribute.capabilityReference}</button>
+                                            <div class="invisible" id="popover-${attribute.name}-body" style="display:none">
+                                                <#assign cap = globalCapabilities[attribute.capabilityReference] />
+                                                <#if cap??>
+                                                    <#list cap.providerPointsUrls as capName,capUrl>
+                                                        <a href="${productHomeUrl}/${capUrl}index.html">${capName}</a> <br/>
+                                                    </#list>
+                                                </#if>
+                                            </div>
+                                                <#else>
+                                                    ${attribute.capabilityReference}
+                                            </#if>
+
                                         </td>
                                     </tr>
                                 </#if>
@@ -256,14 +263,14 @@
 
     <div class="page-header">
 
-        <h3 class="resource-header" data-toggle="collapse" data-target="#operations">Operations
-            (${model.operations?size})</h3>
+        <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#operations">Operations
+            (${model.operations?size})</h4>
 
-        <div class="collapse in" id="operations">
+        <div class="collapse show" id="operations">
             <ul>
                 <#list model.operations as op>
                     <li>
-                        <a data-toggle="collapse" data-target="#operation-${op.name}">
+                        <a href="#"  data-toggle="collapse" data-target="#operation-${op.name}">
                             ${op.name}
                         </a>
                         ${op.description}
@@ -304,7 +311,7 @@
                             <#if op.reply??>
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">Reply properties</h3>
+                                        <h4 class="panel-title">Reply properties</h4>
                                     </div>
                                     <div class="panel-body">
                                         ${op.reply.description}
@@ -313,7 +320,10 @@
                                             <dd>${op.reply.type}</dd>
                                             <#if op.reply.valueType??>
                                                 <dt>Value Type</dt>
-                                                <dd><pre>${op.reply.valueType}</pre></dd>
+                                                <dd><div class="highlight">
+                                                    <pre><code class="language-json" data-lang="json">${op.reply.valueType}</code></pre>
+                                                </div>
+                                                </dd>
                                             </#if>
                                         </dl>
                                     </div>
@@ -328,4 +338,3 @@
 
 </#if>
 
-</div>

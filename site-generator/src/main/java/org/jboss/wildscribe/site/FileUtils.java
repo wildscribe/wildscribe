@@ -116,7 +116,7 @@ public class FileUtils {
                         System.out.println(entry.getName().substring(path.length() + 1));
                         Path fileDest = dest.resolve(entry.getName().substring(path.length() + 1));
                         if (Files.notExists(fileDest.getParent())) {
-                            Files.createDirectory(fileDest.getParent());
+                            Files.createDirectories(fileDest.getParent());
                         }
                         Files.copy(file.getInputStream(entry), fileDest);
                     }

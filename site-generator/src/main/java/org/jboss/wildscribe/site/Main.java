@@ -39,7 +39,7 @@ public class Main {
                 Path sub = target.resolve(file);
                 FileUtils.deleteRecursive(sub.toFile());
             }
-            System.out.print("Generating site in " + target.toString());
+            System.out.println("Generating site in " + target.toString());
 
             copyResources(target);
             Configuration configuration = createFreemarkerConfig(templateDir);

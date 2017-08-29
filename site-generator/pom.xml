@@ -25,17 +25,15 @@
     <parent>
         <groupId>org.jboss.wildscribe</groupId>
         <artifactId>wildscribe-parent</artifactId>
-        <version>1.0.0.Alpha1-SNAPSHOT</version>
+        <version>2.0.0.Alpha1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>wildscribe-site-generator</artifactId>
-    <version>1.0.0.Alpha1-SNAPSHOT</version>
-
+  
     <name>Wildscribe Site Generator</name>
 
     <properties>
-        <version.exec.plugin>1.2.1</version.exec.plugin>
         <versions.txt.dir>${project.parent.basedir}/models/standalone/full</versions.txt.dir>
         <output.dir>${project.basedir}/target/wildscribe-generated</output.dir>
     </properties>

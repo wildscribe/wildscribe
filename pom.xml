@@ -30,12 +30,12 @@
 
     <groupId>org.jboss.wildscribe</groupId>
     <artifactId>wildscribe-parent</artifactId>
-    <version>1.0.0.Alpha1-SNAPSHOT</version>
+    <version>2.0.0.Alpha1-SNAPSHOT</version>
 
     <name>Wildscribe</name>
     <description>
         Documentation generator for all Application servers based
-        on Wildfly, including AS 7.x, Wildfly 8.x and JBoss EAP 6.x
+        on Wildfly, including AS 7.x, Wildfly 8.x, JBoss EAP 6.x and JBoss EAP 7.x
     </description>
 
     <packaging>pom</packaging>
@@ -62,7 +62,7 @@
         <version.junit>4.11</version.junit>
         <version.org.freemarker>2.3.26-incubating</version.org.freemarker>
         <version.org.jboss.dmr>1.4.1.Final</version.org.jboss.dmr>
-        <version.org.wildfly.core>2.1.0.Final</version.org.wildfly.core>
+        <version.org.wildfly.core>2.2.0.Final</version.org.wildfly.core>
 
         <!-- Surefire args -->
         <surefire.jpda.args/>
@@ -70,11 +70,10 @@
 
         <!-- Checkstyle configuration -->
         <linkXRef>false</linkXRef>
-        <version.htmlcompressor>1.4</version.htmlcompressor>
+        <version.htmlcompressor>1.5.2</version.htmlcompressor>
     </properties>
 
     <modules>
-        <module>build-config</module>
         <module>model-dumper</module>
         <module>site-generator</module>
     </modules>
@@ -114,7 +113,7 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${version.checkstyle.plugin}</version>
                     <configuration>
-                        <configLocation>wildscribe-checkstyle/checkstyle.xml</configLocation>
+                        <configLocation>wildfly-checkstyle/checkstyle.xml</configLocation>
                         <consoleOutput>true</consoleOutput>
                         <failsOnError>true</failsOnError>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
@@ -122,9 +121,9 @@
                     </configuration>
                     <dependencies>
                         <dependency>
-                            <groupId>org.jboss.wildscribe</groupId>
-                            <artifactId>wildscribe-build-config</artifactId>
-                            <version>${project.version}</version>
+                            <groupId>org.wildfly.checkstyle</groupId>
+                            <artifactId>wildfly-checkstyle-config</artifactId>
+                            <version>1.0.6.Final</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -175,23 +174,10 @@
         </pluginManagement>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.jboss.wildscribe</groupId>
-            <artifactId>wildscribe-build-config</artifactId>
-        </dependency>
-    </dependencies>
-
     <dependencyManagement>
         <dependencies>
 
             <!-- Modules in this project -->
-
-            <dependency>
-                <groupId>org.jboss.wildscribe</groupId>
-                <artifactId>wildscribe-build-config</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.jboss.wildscribe</groupId>

@@ -52,7 +52,7 @@ public class Child implements Comparable<Child> {
         if (modelDesc.isDefined()) {
             for (Property child : modelDesc.asPropertyList()) {
                 if (!child.getName().equals("*")) {
-                    registrations.add(new Child(child.getName(), child.getValue().get("description").asString(), null));
+                    registrations.add(new Child(child.getName(), child.getValue().get("description").asString(""), null));
                 }
             }
         }

@@ -6,6 +6,7 @@ import org.jboss.dmr.Property;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Representation of a management resource, in a nice format for templates
@@ -19,13 +20,17 @@ public class ResourceDescription {
     private final List<Attribute> attributes;
     private final List<Operation> operations;
     private final Deprecated deprecated;
+    private final List<Capability> capabilities;
+    private final String storage;
 
-    public ResourceDescription(String description, List<Child> children, List<Attribute> attributes, List<Operation> operations, Deprecated deprecated) {
+    public ResourceDescription(String description, List<Child> children, List<Attribute> attributes, List<Operation> operations, Deprecated deprecated, List<Capability> capabilities, String storage) {
         this.description = description;
         this.children = children;
         this.attributes = attributes;
         this.operations = operations;
         this.deprecated = deprecated;
+        this.capabilities = capabilities;
+        this.storage = storage;
     }
 
 
@@ -49,7 +54,19 @@ public class ResourceDescription {
         return deprecated;
     }
 
-    public static ResourceDescription fromModelNode(final ModelNode node) {
+    public List<Capability> getCapabilities() {
+        return capabilities;
+    }
+
+    public String getStorage() {
+        return storage;
+    }
+
+    public  boolean isRuntime(){
+        return "runtime-only".equals(storage);
+    }
+
+    public static ResourceDescription fromModelNode(PathAddress pathElements, final ModelNode node, Map<String, Capability> capabilities) {
         final List<Operation> ops = new ArrayList<Operation>();
         if(node.hasDefined("operations")) {
             for (Property i : node.get("operations").asPropertyList()) {
@@ -75,8 +92,9 @@ public class ResourceDescription {
             }
             Collections.sort(attributes);
         }
+        String storage = node.get("storage").asString("configuration");
 
-        return new ResourceDescription(node.get("description").asString(), children, attributes, ops, Deprecated.fromModel(node));
+        return new ResourceDescription(node.get("description").asString(), children, attributes, ops, Deprecated.fromModel(node), Capability.fromModelList(node.get("capabilities"), capabilities, pathElements), storage);
 
     }
 

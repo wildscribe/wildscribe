@@ -18,8 +18,10 @@ public class Attribute implements Comparable<Attribute> {
     private final String storage;
     private final Deprecated deprecated;
     private final String unit;
+    private final String restartRequired;
+    private final String capabilityReference;
 
-    public Attribute(String name, String description, String type, boolean nillable, boolean expressionsAllowed, String defaultValue, Integer min, Integer max, String accessType, String storage, Deprecated deprecated, String unit) {
+    public Attribute(String name, String description, String type, boolean nillable, boolean expressionsAllowed, String defaultValue, Integer min, Integer max, String accessType, String storage, Deprecated deprecated, String unit, String restartRequired, String capabilityReference) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -32,6 +34,8 @@ public class Attribute implements Comparable<Attribute> {
         this.storage = storage;
         this.deprecated = deprecated;
         this.unit = unit;
+        this.restartRequired = restartRequired;
+        this.capabilityReference = capabilityReference;
     }
 
     public String getName() {
@@ -87,6 +91,14 @@ public class Attribute implements Comparable<Attribute> {
         return unit;
     }
 
+    public String getRestartRequired() {
+        return restartRequired;
+    }
+
+    public String getCapabilityReference() {
+        return capabilityReference;
+    }
+
     public static Attribute fromProperty(final Property property) {
         String name = property.getName();
         String description = property.getValue().get("description").asString();
@@ -117,7 +129,9 @@ public class Attribute implements Comparable<Attribute> {
         if (property.getValue().hasDefined("unit")) {
             unit = property.getValue().get("unit").asString();
         }
-        Attribute op = new Attribute(name, description, type, nilable, expressionsAllowed, defaultValue, min, max, accessType, storage, Deprecated.fromModel(property.getValue()), unit);
+        String restartRequired = property.getValue().get("restart-required").asStringOrNull();
+        String capabilityReference = property.getValue().get("capability-reference").asStringOrNull();
+        Attribute op = new Attribute(name, description, type, nilable, expressionsAllowed, defaultValue, min, max, accessType, storage, Deprecated.fromModel(property.getValue()), unit, restartRequired, capabilityReference);
         return op;
     }
 }

@@ -25,13 +25,12 @@
     <parent>
         <groupId>org.jboss.wildscribe</groupId>
         <artifactId>wildscribe-parent</artifactId>
-        <version>1.0.0.Alpha1-SNAPSHOT</version>
+        <version>2.0.0.Alpha1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>wildscribe-model-dumper</artifactId>
-    <version>1.0.0.Alpha1-SNAPSHOT</version>
-
+   
     <name>Wildscribe Model Dumper</name>
 
     <dependencies>

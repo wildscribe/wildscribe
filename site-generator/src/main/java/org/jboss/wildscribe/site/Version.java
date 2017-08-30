@@ -10,7 +10,7 @@ import java.io.File;
 public final class Version {
 
     public static final String JBOSS_EAP = "JBoss EAP";
-    public static final String WILDFLY = "Wildfly";
+    public static final String WILDFLY = "WildFly";
     public static final String JBOSS_AS7 = "JBoss AS7";
 
     private final String product;

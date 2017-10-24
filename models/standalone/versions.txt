@@ -1,4 +1,4 @@
-WildFly:11.0.CR1:Wildfly-11.0.0.CR1.dmr
+WildFly:11.0.Final:Wildfly-11.0.0.Final.dmr
 WildFly:10.1:Wildfly-10.1.0.Final.dmr
 WildFly:10.0:Wildfly-10.0.0.Final.dmr
 WildFly:9.0:Wildfly-9.0.2.Final.dmr

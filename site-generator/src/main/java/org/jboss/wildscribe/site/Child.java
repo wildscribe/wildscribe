@@ -13,15 +13,17 @@ import java.util.List;
 public class Child implements Comparable<Child> {
     private final String name;
     private final String description;
+    private final Deprecated deprecated;
 
     /**
      * If this is a non-wildcard registration
      */
     private final List<Child> children;
 
-    public Child(String name, String description, List<Child> children) {
+    public Child(String name, String description, Deprecated deprecated, List<Child> children) {
         this.name = name;
         this.description = description;
+        this.deprecated = deprecated;
         this.children = children;
     }
 
@@ -31,6 +33,10 @@ public class Child implements Comparable<Child> {
 
     public String getDescription() {
         return description;
+    }
+
+    public Deprecated getDeprecated() {
+        return deprecated;
     }
 
     public List<Child> getChildren() {
@@ -52,13 +58,13 @@ public class Child implements Comparable<Child> {
         if (modelDesc.isDefined()) {
             for (Property child : modelDesc.asPropertyList()) {
                 if (!child.getName().equals("*")) {
-                    registrations.add(new Child(child.getName(), child.getValue().get("description").asString(""), null));
+                    registrations.add(new Child(child.getName(), child.getValue().get("description").asString(""), Deprecated.fromModel(child.getValue()), null));
                 }
             }
         }
         Collections.sort(registrations);
 
-        Child op = new Child(name, description, registrations);
+        Child op = new Child(name, description, Deprecated.fromModel(property.getValue()), registrations);
 
         return op;
     }

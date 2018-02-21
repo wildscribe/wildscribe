@@ -66,3 +66,6 @@ dl:after {content:"";display:table;clear:both;}
   border-top: 1px solid #eee;
 }
 
+a.deprecated {
+    text-decoration: line-through;
+}

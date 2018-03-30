@@ -130,5 +130,4 @@ public class SiteGenerator {
         }
         return System.getProperty("url");
     }
-
 }

@@ -76,6 +76,7 @@
     <modules>
         <module>model-dumper</module>
         <module>site-generator</module>
+        <module>message-dumper</module>
     </modules>
 
     <build>

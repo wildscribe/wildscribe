@@ -35,6 +35,16 @@ public final class Version {
         return dmrFile;
     }
 
+    public File getMessagesFile() {
+        //hacky, don't run this in a dir with .dmr in the name
+        String messagesFile = dmrFile.getAbsolutePath().replace(".dmr", ".messages");
+        File m = new File(messagesFile);
+        if(m.exists()) {
+            return m;
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Version{" +

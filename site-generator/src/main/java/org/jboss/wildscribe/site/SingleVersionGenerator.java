@@ -2,6 +2,8 @@ package org.jboss.wildscribe.site;
 
 import static org.jboss.wildscribe.site.SiteGenerator.INDEX_HTML;
 
+import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,17 +18,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.jboss.dmr.ModelNode;
+
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.jboss.dmr.ModelNode;
 
 /**
  * @author Tomaz Cerar (c) 2017 Red Hat Inc.
  */
 public class SingleVersionGenerator {
     public static final String RESOURCE_HTML = "resource.html";
+    private static final String LOG_MESSAGE_REFERENCE_HTML = "log-message-reference.html";
+    private static final String LOGS_HTML = "logs.html";
     public final String layoutHtml;
     private final Map<String, Capability> capabilities = new LinkedHashMap<>();
     private final List<Version> versions;
@@ -49,12 +54,37 @@ public class SingleVersionGenerator {
     }
 
     public void generate() throws IOException, TemplateException {
+        List<LogMessage> messages = loadLogMessages();
         final ModelNode model = new ModelNode();
         model.readExternal(new FileInputStream(version.getDmrFile()));
         capabilities.putAll(getCapabilityMap(model));
         Template template = configuration.getTemplate(layoutHtml);
-        createResourcePage(model, template);
+        createResourcePage(model, template, messages != null);
+        if (messages != null) {
+            createLogMessagePage(template, messages);
+        }
+    }
 
+    private List<LogMessage> loadLogMessages() throws IOException {
+        File file = version.getMessagesFile();
+        if (file == null) {
+            return null;
+        }
+        List<LogMessage> ret = new ArrayList<>();
+        try (DataInputStream in = new DataInputStream(new FileInputStream(file))) {
+            for (; ; ) {
+                String code = in.readUTF();
+                String level = in.readUTF();
+                String returnType = in.readUTF();
+                String message = in.readUTF();
+                int id = in.readInt();
+                int length = in.readInt();
+                ret.add(new LogMessage(level, code, message, length, id, returnType));
+            }
+        } catch (EOFException e) {
+
+        }
+        return ret;
     }
 
 
@@ -71,7 +101,7 @@ public class SingleVersionGenerator {
     }
 
 
-    private void createResourcePage(ModelNode model, Template template, PathElement... path) throws TemplateException, IOException {
+    private void createResourcePage(ModelNode model, Template template, boolean hasLogs, PathElement... path) throws TemplateException, IOException {
         final String currentUrl = buildCurrentUrl(path);
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", RESOURCE_HTML);
@@ -79,6 +109,7 @@ public class SingleVersionGenerator {
         data.put("version", version);
         data.put("urlbase", getUrlBase());
         data.put("currenturl", currentUrl);
+        data.put("has_messages", hasLogs);
         data.put("globalCapabilities", capabilities);
         if (single) {
             data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
@@ -119,7 +150,7 @@ public class SingleVersionGenerator {
                             //System.out.println(String.format("resource '%s' is missing operations node", Arrays.asList(newPath)));
                             newModel.get("operations");
                         }
-                        createResourcePage(newModel, template, newPath);
+                        createResourcePage(newModel, template, false, newPath);
 
                     }
                 } else {
@@ -130,13 +161,55 @@ public class SingleVersionGenerator {
                         if (childModel.hasDefined("model-description") && childModel.get("model-description").hasDefined(registration.getName())) {
                             ModelNode newModel = childModel.get("model-description").get(registration.getName());
 
-                            createResourcePage(newModel, template, newPath);
+                            createResourcePage(newModel, template, false, newPath);
                         }
                     }
                 }
             }
         }
 
+    }
+
+    private void createLogMessagePage(Template template, List<LogMessage> messages) throws TemplateException, IOException {
+        final Map<String, Object> data = new HashMap<String, Object>();
+        data.put("page", LOGS_HTML);
+        data.put("versions", versions);
+        data.put("version", version);
+        data.put("urlbase", getUrlBase());
+        data.put("globalCapabilities", capabilities);
+        if (single) {
+            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
+        } else {
+            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
+        }
+
+        Map<String, List<DisplayMessage>> map = new TreeMap<>();
+        for (LogMessage msg : messages) {
+            if(msg.getCode().isEmpty()) {
+                continue;
+            }
+            String realId = msg.getCode() + String.format("%0" + msg.getLength() + "d", msg.getMsgId());
+            DisplayMessage d = new DisplayMessage(realId, msg.getMessage(), msg.getLevel(), msg.getMsgId(), msg.returnType.equals("void") ? "" : msg.returnType);
+            map.computeIfAbsent(msg.getCode(), (i) -> new ArrayList<>()).add(d);
+        }
+        map.forEach((s, messages1) -> Collections.sort(messages1));
+        data.put("messages", map);
+        data.put("codes", new ArrayList<>(map.keySet()));
+        File parent;
+        if (single) {
+            parent = new File(outputDir.toFile().getAbsolutePath() + File.separator);
+        } else {
+            parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion());
+        }
+        parent.mkdirs();
+        StringWriter stringWriter = new StringWriter();
+        template.process(data, stringWriter);
+        HtmlCompressor compressor = new HtmlCompressor();
+        String compressedHtml = compressor.compress(stringWriter.getBuffer().toString());
+        //String compressedHtml = stringWriter.getBuffer().toString();
+        try (FileOutputStream stream = new FileOutputStream(new File(parent, LOG_MESSAGE_REFERENCE_HTML))) {
+            stream.write(compressedHtml.getBytes("UTF-8"));
+        }
     }
 
     private String getUrlBase() {
@@ -178,5 +251,90 @@ public class SingleVersionGenerator {
             }
         }
         return sb.toString();
+    }
+
+
+    public static final class LogMessage {
+        final String level;
+        final String code;
+        final String message;
+        final int length;
+        final int msgId;
+        final String returnType;
+
+        private LogMessage(String level, String code, String message, int length, int msgId, String returnType) {
+            this.level = level;
+            this.code = code;
+            this.message = message;
+            this.length = length;
+            this.msgId = msgId;
+            this.returnType = returnType;
+        }
+
+        public String getLevel() {
+            return level;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public int getLength() {
+            return length;
+        }
+
+        public int getMsgId() {
+            return msgId;
+        }
+
+        @Override
+        public String toString() {
+            return "LogMessage{" +
+                    "level='" + level + '\'' +
+                    ", code='" + code + '\'' +
+                    ", message='" + message + '\'' +
+                    ", length=" + length +
+                    ", msgId=" + msgId +
+                    '}';
+        }
+    }
+
+    public class DisplayMessage implements Comparable<DisplayMessage> {
+        private final String id, message, level;
+        private final int numericId;
+        final String returnType;
+
+        public DisplayMessage(String id, String message, String level, int numericId, String returnType) {
+            this.id = id;
+            this.message = message;
+            this.level = level;
+            this.numericId = numericId;
+            this.returnType = returnType;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public String getLevel() {
+            return level;
+        }
+
+        public String getReturnType() {
+            return returnType;
+        }
+
+        @Override
+        public int compareTo(DisplayMessage o) {
+            return Integer.compare(numericId, o.numericId);
+        }
     }
 }

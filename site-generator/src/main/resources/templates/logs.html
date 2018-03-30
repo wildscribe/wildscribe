@@ -1,0 +1,37 @@
+
+
+<#list codes as code>
+<h3 class="text-muted">${code}</h3>
+
+<div class="well">
+    <table cellpadding="10">
+        <thead>
+        <tr>
+            <td><b>Code</b></td>
+            <td><b>Level</b></td>
+            <td><b>Return Type</b></td>
+            <td><b>Message</b></td>
+        </tr>
+        </thead>
+        <tbody>
+        <#list messages[code] as m>
+            <tr>
+                <td>
+                    ${m.id}
+                </td>
+                <td>
+                    ${m.level}
+                </td>
+                <td>
+                    ${m.returnType}
+                </td>
+                <td>
+                    ${m.message}
+                </td>
+            </tr>
+        </#list>
+        </tbody>
+    </table>
+</div>
+
+</#list>

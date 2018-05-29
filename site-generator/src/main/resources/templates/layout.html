@@ -9,10 +9,9 @@
             <title>WildFly Model Reference</title>
     </#if>
     <meta name="description" content="">
-    <base href="${urlbase}" />
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
     <div class="container">
@@ -31,7 +30,7 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav text-md-center nav-justified w-100">
                         <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/index.html">Home <span class="sr-only">(current)</span></a>
                         </li>
                         <!--li class="nav-item ${(page == 'index.html')?string('active', '')}"><a class="nav-link"  href="index.html">Home</a></li-->
                         <li class="nav-item dropdown ${(version??)?string('active', '')}">
@@ -40,14 +39,14 @@
                             <div class="dropdown-menu" aria-labelledby="versions">
                                 <#list versions as v>
                                     <a class="dropdown-item ${(version?? && version.product==v.product && version.version==v.version)?string('active','')}"
-                                       href="${v.product?url}/${v.version?url}/index.html">
+                                       href="/${v.product?url}/${v.version?url}/index.html">
                                         ${v.product} ${v.version}</a>
                                 </#list>
                             </div>
                         </li>
                         <li class="nav-item"><a class="nav-link"  href="http://www.jboss.com">Get JBoss EAP</a></li>
                         <li class="nav-item"><a class="nav-link"  href="http://www.wildfly.org">Get WildFly</a></li>
-                        <li class="nav-item ${(page == 'about.html')?string('active', '')}"><a class="nav-link" href="about.html">About</a></li>
+                        <li class="nav-item ${(page == '/about.html')?string('active', '')}"><a class="nav-link" href="/about.html">About</a></li>
                     </ul>
                 </div>
             </nav>
@@ -63,13 +62,13 @@
 
 </div>
 <!-- /container -->
-<script src="js/vendor/jquery-3.2.1.slim.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.slim.min.js"><\/script>')</script>
+<script src="/js/vendor/jquery-3.2.1.slim.min.js"></script>
+<script>window.jQuery || document.write('<script src="/js/vendor/jquery-3.2.1.slim.min.js"><\/script>')</script>
 
-<script src="js/vendor/popper.min.js"></script>
-<script src="js/vendor/bootstrap.min.js"></script>
-<script src="js/main.js"></script>
-<script src="js/vendor/ie10-viewport-bug-workaround.js"></script>
+<script src="/js/vendor/popper.min.js"></script>
+<script src="/js/vendor/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/vendor/ie10-viewport-bug-workaround.js"></script>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

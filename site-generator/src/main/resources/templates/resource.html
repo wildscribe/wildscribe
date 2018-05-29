@@ -2,7 +2,7 @@
 <#list breadcrumbs as crumb>
         <#if crumb_has_next>
             <li class="breadcrumb-item">
-                <a href="${version.product?url}/${version.version?url}/${crumb.url}">${crumb.label}</a>
+                <a href="/${version.product?url}/${version.version?url}/${crumb.url}">${crumb.label}</a>
             </li>
             <#else>
                 <li class="breadcrumb-item active">${crumb.label}</li>
@@ -39,7 +39,7 @@
 
                     <#if child.children?size == 0>
                         <#noautoesc>
-                        <a href="${version.product?url}/${version.version?url}${currenturl}/${child.name}/index.html" class="${child.deprecated.deprecated?then('deprecated','')}">${child.name}</a>
+                        <a href="/${version.product?url}/${version.version?url}${currenturl}/${child.name}/index.html" class="${child.deprecated.deprecated?then('deprecated','')}">${child.name}</a>
                         </#noautoesc>
                         <#else>
                             <b>${child.name}</b>
@@ -51,7 +51,7 @@
                         <#list child.children as c>
                             <li>
                                 <#noautoesc>
-                                <a href="${version.product?url}/${version.version?url}${currenturl}/${child.name}/${c.name}/index.html" class="${c.deprecated.deprecated?then('deprecated','')}">${c.name}</a>
+                                <a href="/${version.product?url}/${version.version?url}${currenturl}/${child.name}/${c.name}/index.html" class="${c.deprecated.deprecated?then('deprecated','')}">${c.name}</a>
                                 </#noautoesc>
                                 ${c.description}
                             </li>
@@ -84,7 +84,7 @@
                         <td>
                             <#if cap.providerPointsUrls?has_content >
                             <#list cap.providerPointsUrls as capName,capUrl>
-                                <a href="${productHomeUrl}/${capUrl}index.html">${capName}</a> <br/>
+                                <a href="/${productHomeUrl}/${capUrl}index.html">${capName}</a> <br/>
                             </#list>
                                 <#else><p>none</p>
                             </#if>
@@ -108,7 +108,7 @@
                 <ul>
                     <#list model.attributes as attribute>
                         <li>
-                            <a href="#" data-toggle="collapse" data-target="#attribute-${attribute.name}" class="${attribute.deprecated.deprecated?then('deprecated','')}">${attribute.name}</a>
+                            <a id="attr-${attribute.name}" href="#attr-${attribute.name}" data-toggle="collapse" data-target="#attribute-${attribute.name}" class="${attribute.deprecated.deprecated?then('deprecated','')}">${attribute.name}</a>
                             ${attribute.description}
                         </li>
 
@@ -266,7 +266,7 @@
             <ul>
                 <#list model.operations as op>
                     <li>
-                        <a href="#" data-toggle="collapse" data-target="#operation-${op.name}" class="${(op.deprecated.deprecated)?then('deprecated','')}">${op.name}</a>
+                        <a id="op-${op.name}" href="#op-${op.name}" data-toggle="collapse" data-target="#operation-${op.name}" class="${(op.deprecated.deprecated)?then('deprecated','')}">${op.name}</a>
                         ${op.description}
 
                         <div id="operation-${op.name}" class="collapse">

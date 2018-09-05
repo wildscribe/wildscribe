@@ -12,4 +12,4 @@ Add any new model versions to models/standalone/versions.txt
 
 Then run (for example):
 
-$ java -Durl=https://wildscribe.github.io -jar site-generator/target/site-generator.jar models/standalone/ ../wildscribe.github.io/ ../path-to-wildfly-modules-dir
+$ java -Durl=https://wildscribe.github.io -jar site-generator/target/site-generator.jar models/standalone/ ../wildscribe.github.io/

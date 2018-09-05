@@ -73,7 +73,7 @@ public class Main {
     }
 
     //this are usual missing subsystems, this might change over time
-    private static List<String> REQUIRED_EXTENSIONS = Arrays.asList("org.wildfly.extension.picketlink", "org.jboss.as.xts", "org.jboss.as.clustering.jgroups");
+    private static List<String> REQUIRED_EXTENSIONS = Arrays.asList("org.wildfly.extension.datasources-agroal", "org.wildfly.extension.rts", "org.jboss.as.xts", "org.jboss.as.clustering.jgroups");
 
     private static void validateRunningConfiguration(ModelControllerClient client) throws IOException {
         final ModelNode operation = new ModelNode();

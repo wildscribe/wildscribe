@@ -2,7 +2,7 @@ Models Data Directory
 =====================
 
 This directory contains a representation of the model of various versions of the Wildfly, JBoss EAP and JBoss AS7 application
-servers. These diffs are generated against the standalone-full-ha.xml profile, with the XTS subsystem added to the profile
+servers. These diffs are generated against the standalone-full-ha.xml profile, with the RTS, XTS and Agroal subsystems added to the profile
 (note that some of the older models were generated against standalone-full.xml, and as such are missing some subsystems).
 
 This data allows the Wildscribe pages to be generated offline, without a running server instance. It also means that at some
@@ -11,7 +11,7 @@ stage it should be possible to generate diff's of the models.
 Add additional subsystems
 =====================
 
-$JBOSS_HOME/bin/jboss-cli.sh -c --commands=/extension=org.wildfly.extension.rts:add,/extension=org.jboss.as.xts:add,/extension=org.wildfly.extension.picketlink:add
+$JBOSS_HOME/bin/jboss-cli.sh -c --commands=/extension=org.wildfly.extension.rts:add,/extension=org.jboss.as.xts:add,/extension=org.wildfly.extension.datasources-agroal:add
 
 Dumping models
 =======================

@@ -104,6 +104,9 @@ public class SingleVersionGenerator {
     private void createResourcePage(ModelNode model, Template template, boolean hasLogs, PathElement... path) throws TemplateException, IOException {
         final String currentUrl = buildCurrentUrl(path);
         final String urlBase = getUrlBase();
+        final String productHomeUrl = single ? urlBase : version.getProduct() + '/' + version.getVersion();
+        final ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
+        final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path, productHomeUrl);
         final Map<String, Object> data = new HashMap<>();
         data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
@@ -112,15 +115,8 @@ public class SingleVersionGenerator {
         data.put("currenturl", currentUrl);
         data.put("has_messages", hasLogs);
         data.put("globalCapabilities", capabilities);
-        if (single) {
-            data.put("productHomeUrl", urlBase);
-        } else {
-            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
-        }
-        ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
+        data.put("productHomeUrl", productHomeUrl);
         data.put("model", resourceDescription);
-
-        final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path);
         data.put("breadcrumbs", crumbs);
 
         File parent;
@@ -173,17 +169,14 @@ public class SingleVersionGenerator {
 
     private void createLogMessagePage(Template template, List<LogMessage> messages) throws TemplateException, IOException {
         final String urlBase = getUrlBase();
+        final String productHomeUrl = single ? urlBase : version.getProduct() + '/' + version.getVersion();
         final Map<String, Object> data = new HashMap<>();
         data.put("page", LOGS_HTML);
         data.put("versions", versions);
         data.put("version", version);
         data.put("urlbase", urlBase);
         data.put("globalCapabilities", capabilities);
-        if (single) {
-            data.put("productHomeUrl", urlBase);
-        } else {
-            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
-        }
+        data.put("productHomeUrl", productHomeUrl);
 
         Map<String, List<DisplayMessage>> map = new TreeMap<>();
         for (LogMessage msg : messages) {
@@ -228,7 +221,7 @@ public class SingleVersionGenerator {
         return newPath;
     }
 
-    private List<Breadcrumb> buildBreadcrumbs(Version version, PathElement[] path) {
+    private List<Breadcrumb> buildBreadcrumbs(Version version, PathElement[] path, String productHomeUrl) {
         final List<Breadcrumb> crumbs = new ArrayList<>();
         crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), "index.html"));
         StringBuilder currentUrl = new StringBuilder();

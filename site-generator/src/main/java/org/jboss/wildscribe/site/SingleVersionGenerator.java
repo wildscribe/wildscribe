@@ -223,14 +223,15 @@ public class SingleVersionGenerator {
 
     private List<Breadcrumb> buildBreadcrumbs(Version version, PathElement[] path, String productHomeUrl) {
         final List<Breadcrumb> crumbs = new ArrayList<>();
-        crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), "index.html"));
-        StringBuilder currentUrl = new StringBuilder();
+        crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), productHomeUrl + "/index.html"));
+        StringBuilder currentUrl = new StringBuilder(productHomeUrl);
         for (PathElement i : path) {
             currentUrl.append("/").append(i.getKey());
             if (!i.isWildcard()) {
                 currentUrl.append("/").append(i.getValue());
             }
-            crumbs.add(new Breadcrumb(i.getKey() + (i.isWildcard() ? "" : ("=" + i.getValue())), currentUrl.toString() + "/index.html"));
+            final String label = i.getKey() + (i.isWildcard() ? "" : ("=" + i.getValue()));
+            crumbs.add(new Breadcrumb(label, currentUrl.toString() + "/index.html"));
         }
         return crumbs;
     }

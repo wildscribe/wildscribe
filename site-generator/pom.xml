@@ -36,6 +36,7 @@
     <properties>
         <versions.txt.dir>${project.parent.basedir}/models/standalone</versions.txt.dir>
         <output.dir>${project.basedir}/target/wildscribe-generated</output.dir>
+        <site.url>https://wildscribe.github.io</site.url>
     </properties>
 
     <dependencies>
@@ -136,7 +137,7 @@
                     <systemProperties>
                         <systemProperty>
                             <key>url</key>
-                            <value>http://wildscribe.github.io</value>
+                            <value>${site.url}</value>
                         </systemProperty>
                     </systemProperties>
                 </configuration>

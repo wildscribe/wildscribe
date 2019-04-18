@@ -39,7 +39,7 @@
 
                     <#if child.children?size == 0>
                         <#noautoesc>
-                        <a href="/${version.product?url}/${version.version?url}${currenturl}/${child.name}/index.html" class="${child.deprecated.deprecated?then('deprecated','')}">${child.name}</a>
+                        <a href="${currenturl}/${child.name}/index.html" class="${child.deprecated.deprecated?then('deprecated','')}">${child.name}</a>
                         </#noautoesc>
                         <#else>
                             <b>${child.name}</b>
@@ -51,7 +51,7 @@
                         <#list child.children as c>
                             <li>
                                 <#noautoesc>
-                                <a href="/${version.product?url}/${version.version?url}${currenturl}/${child.name}/${c.name}/index.html" class="${c.deprecated.deprecated?then('deprecated','')}">${c.name}</a>
+                                <a href="${currenturl}/${child.name}/${c.name}/index.html" class="${c.deprecated.deprecated?then('deprecated','')}">${c.name}</a>
                                 </#noautoesc>
                                 ${c.description}
                             </li>

@@ -2,6 +2,8 @@ package org.jboss.wildscribe.site;
 
 import static org.jboss.wildscribe.site.SiteGenerator.INDEX_HTML;
 
+import org.jboss.dmr.ModelNode;
+
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -17,8 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.jboss.dmr.ModelNode;
 
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import freemarker.template.Configuration;
@@ -103,16 +103,17 @@ public class SingleVersionGenerator {
 
     private void createResourcePage(ModelNode model, Template template, boolean hasLogs, PathElement... path) throws TemplateException, IOException {
         final String currentUrl = buildCurrentUrl(path);
-        final Map<String, Object> data = new HashMap<String, Object>();
+        final String urlBase = getUrlBase();
+        final Map<String, Object> data = new HashMap<>();
         data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
         data.put("version", version);
-        data.put("urlbase", getUrlBase());
+        data.put("urlbase", urlBase);
         data.put("currenturl", currentUrl);
         data.put("has_messages", hasLogs);
         data.put("globalCapabilities", capabilities);
         if (single) {
-            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
+            data.put("productHomeUrl", urlBase);
         } else {
             data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
         }
@@ -171,14 +172,15 @@ public class SingleVersionGenerator {
     }
 
     private void createLogMessagePage(Template template, List<LogMessage> messages) throws TemplateException, IOException {
-        final Map<String, Object> data = new HashMap<String, Object>();
+        final String urlBase = getUrlBase();
+        final Map<String, Object> data = new HashMap<>();
         data.put("page", LOGS_HTML);
         data.put("versions", versions);
         data.put("version", version);
-        data.put("urlbase", getUrlBase());
+        data.put("urlbase", urlBase);
         data.put("globalCapabilities", capabilities);
         if (single) {
-            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
+            data.put("productHomeUrl", urlBase);
         } else {
             data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
         }

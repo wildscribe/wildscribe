@@ -84,7 +84,7 @@
                         <td>
                             <#if cap.providerPointsUrls?has_content >
                             <#list cap.providerPointsUrls as capName,capUrl>
-                                <a href="/${productHomeUrl}/${capUrl}index.html">${capName}</a> <br/>
+                                <a href="${productHomeUrl}/${capUrl}index.html">${capName}</a> <br/>
                             </#list>
                                 <#else><p>none</p>
                             </#if>

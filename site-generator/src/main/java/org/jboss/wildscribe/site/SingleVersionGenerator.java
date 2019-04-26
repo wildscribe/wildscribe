@@ -103,16 +103,20 @@ public class SingleVersionGenerator {
 
     private void createResourcePage(ModelNode model, Template template, boolean hasLogs, PathElement... path) throws TemplateException, IOException {
         final String currentUrl = buildCurrentUrl(path);
+        final String relativePathToContextRoot = createRelativePathToContextRoor(currentUrl);
+        final String currentUrlWithSeparator = currentUrl + (currentUrl.isEmpty() ? "" : "/");
         final String urlBase = getUrlBase();
         final String productHomeUrl = single ? urlBase : version.getProduct() + '/' + version.getVersion();
         final ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
-        final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path, productHomeUrl);
+        final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path);
         final Map<String, Object> data = new HashMap<>();
         data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
         data.put("version", version);
         data.put("urlbase", urlBase);
         data.put("currenturl", currentUrl);
+        data.put("currentUrlWithSeparator", currentUrlWithSeparator);
+        data.put("relativePathToContextRoot", relativePathToContextRoot);
         data.put("has_messages", hasLogs);
         data.put("globalCapabilities", capabilities);
         data.put("productHomeUrl", productHomeUrl);
@@ -123,7 +127,7 @@ public class SingleVersionGenerator {
         if (single) {
             parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + currentUrl);
         } else {
-            parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + currentUrl);
+            parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + (currentUrl.isEmpty() || currentUrl.startsWith(File.separator)? "" : File.separator) + currentUrl);
         }
         parent.mkdirs();
         StringWriter stringWriter = new StringWriter();
@@ -167,14 +171,29 @@ public class SingleVersionGenerator {
 
     }
 
+    static String createRelativePathToContextRoor(String relativeUrl) {
+        StringBuilder sb = new StringBuilder();
+        int length = relativeUrl.isEmpty() ? 0 : relativeUrl.split("/").length;
+        for (int i = 0; i < length; i++) {
+            sb.append("../");
+        }
+        return sb.toString();
+    }
+
     private void createLogMessagePage(Template template, List<LogMessage> messages) throws TemplateException, IOException {
         final String urlBase = getUrlBase();
         final String productHomeUrl = single ? urlBase : version.getProduct() + '/' + version.getVersion();
+        final String currentUrl = buildCurrentUrl();
+        final String currentUrlWithSeparator = currentUrl + (currentUrl.isEmpty() ? "" : "/");
+        final String relativePathToContextRoot = createRelativePathToContextRoor(currentUrl);
         final Map<String, Object> data = new HashMap<>();
         data.put("page", LOGS_HTML);
         data.put("versions", versions);
         data.put("version", version);
         data.put("urlbase", urlBase);
+        data.put("currentUrl", currentUrl);
+        data.put("currentUrlWithSeparator", currentUrlWithSeparator);
+        data.put("relativePathToContextRoot", relativePathToContextRoot);
         data.put("globalCapabilities", capabilities);
         data.put("productHomeUrl", productHomeUrl);
 
@@ -221,17 +240,21 @@ public class SingleVersionGenerator {
         return newPath;
     }
 
-    private List<Breadcrumb> buildBreadcrumbs(Version version, PathElement[] path, String productHomeUrl) {
+    private List<Breadcrumb> buildBreadcrumbs(Version version, PathElement[] path) {
         final List<Breadcrumb> crumbs = new ArrayList<>();
-        crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), productHomeUrl + "/index.html"));
-        StringBuilder currentUrl = new StringBuilder(productHomeUrl);
+        crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), "index.html"));
+        StringBuilder currentUrl = new StringBuilder("");
         for (PathElement i : path) {
-            currentUrl.append("/").append(i.getKey());
+            if (!currentUrl.toString().isEmpty()) {
+                currentUrl.append("/");
+            }
+            currentUrl.append(i.getKey());
             if (!i.isWildcard()) {
                 currentUrl.append("/").append(i.getValue());
             }
             final String label = i.getKey() + (i.isWildcard() ? "" : ("=" + i.getValue()));
-            crumbs.add(new Breadcrumb(label, currentUrl.toString() + "/index.html"));
+            String url = currentUrl.toString();
+            crumbs.add(new Breadcrumb(label, url + (url.isEmpty() ? "" : "/") + "index.html"));
         }
         return crumbs;
     }
@@ -239,7 +262,9 @@ public class SingleVersionGenerator {
     private String buildCurrentUrl(final PathElement... path) {
         StringBuilder sb = new StringBuilder();
         for (PathElement i : path) {
-            sb.append('/');
+            if (!sb.toString().isEmpty()) {
+                sb.append('/');
+            }
             sb.append(i.getKey());
             if (!i.isWildcard()) {
                 sb.append('/');

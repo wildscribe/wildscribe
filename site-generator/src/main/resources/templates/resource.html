@@ -2,7 +2,7 @@
 <#list breadcrumbs as crumb>
         <#if crumb_has_next>
             <li class="breadcrumb-item">
-                <a href="${crumb.url}">${crumb.label}</a>
+                <a href="${relativePathToContextRoot}${crumb.url}">${crumb.label}</a>
             </li>
             <#else>
                 <li class="breadcrumb-item active">${crumb.label}</li>
@@ -39,7 +39,7 @@
 
                     <#if child.children?size == 0>
                         <#noautoesc>
-                        <a href="${currenturl}/${child.name}/index.html" class="${child.deprecated.deprecated?then('deprecated','')}">${child.name}</a>
+                        <a href="${child.name}/index.html" class="${child.deprecated.deprecated?then('deprecated','')}">${child.name}</a>
                         </#noautoesc>
                         <#else>
                             <b>${child.name}</b>
@@ -51,7 +51,7 @@
                         <#list child.children as c>
                             <li>
                                 <#noautoesc>
-                                <a href="${currenturl}/${child.name}/${c.name}/index.html" class="${c.deprecated.deprecated?then('deprecated','')}">${c.name}</a>
+                                <a href="${child.name}/${c.name}/index.html" class="${c.deprecated.deprecated?then('deprecated','')}">${c.name}</a>
                                 </#noautoesc>
                                 ${c.description}
                             </li>
@@ -84,7 +84,7 @@
                         <td>
                             <#if cap.providerPointsUrls?has_content >
                             <#list cap.providerPointsUrls as capName,capUrl>
-                                <a href="${productHomeUrl}/${capUrl}index.html">${capName}</a> <br/>
+                                <a href="${relativePathToContextRoot}${capUrl}index.html">${capName}</a> <br/>
                             </#list>
                                 <#else><p>none</p>
                             </#if>
@@ -149,7 +149,7 @@
                                                 <#assign cap = globalCapabilities[attribute.capabilityReference] />
                                                 <#if cap??>
                                                     <#list cap.providerPointsUrls as capName,capUrl>
-                                                        <a href="${productHomeUrl}/${capUrl}index.html">${capName}</a> <br/>
+                                                        <a href="${relativePathToContextRoot}${capUrl}index.html">${capName}</a> <br/>
                                                     </#list>
                                                 </#if>
                                             </div>
@@ -338,7 +338,7 @@
     <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#messages">Log Messages</h4>
 
     <div class="collapse show" id="messages">
-        <a href="${productHomeUrl}/log-message-reference.html">Log and Exception Message Code Reference</a>
+        <a href="${relativePathToContextRoot}log-message-reference.html">Log and Exception Message Code Reference</a>
     </div>
 </div>
 

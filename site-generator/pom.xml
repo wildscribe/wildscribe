@@ -36,7 +36,6 @@
     <properties>
         <versions.txt.dir>${project.parent.basedir}/models/standalone</versions.txt.dir>
         <output.dir>${project.basedir}/target/wildscribe-generated</output.dir>
-        <site.url>https://wildscribe.github.io</site.url>
         <PRODUCT_VERSION>JBoss-EAP-7.3.0.CD16</PRODUCT_VERSION>
     </properties>
 
@@ -135,12 +134,6 @@
                         <argument>${versions.txt.dir}</argument>
                         <argument>${output.dir}</argument>
                     </arguments>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>url</key>
-                            <value>${site.url}</value>
-                        </systemProperty>
-                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>

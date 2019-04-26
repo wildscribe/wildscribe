@@ -29,7 +29,6 @@
     <properties>
         <versions.txt.dir>@versions.txt.dir@</versions.txt.dir>
         <output.dir>${project.basedir}/target/wildscribe-generated</output.dir>
-        <site.url>https://wildscribe.github.io</site.url>
         <version.exec.plugin>1.6.0</version.exec.plugin>
     </properties>
 
@@ -55,12 +54,6 @@
                         <argument>${versions.txt.dir}</argument>
                         <argument>${output.dir}</argument>
                     </arguments>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>url</key>
-                            <value>${site.url}</value>
-                        </systemProperty>
-                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>

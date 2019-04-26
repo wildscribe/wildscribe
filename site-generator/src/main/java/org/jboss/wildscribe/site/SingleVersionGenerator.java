@@ -105,15 +105,13 @@ public class SingleVersionGenerator {
         final String currentUrl = buildCurrentUrl(path);
         final String relativePathToContextRoot = createRelativePathToContextRoor(currentUrl);
         final String currentUrlWithSeparator = currentUrl + (currentUrl.isEmpty() ? "" : "/");
-        final String urlBase = getUrlBase();
-        final String productHomeUrl = single ? urlBase : version.getProduct() + '/' + version.getVersion();
+        final String productHomeUrl = single ? "" : version.getProduct() + '/' + version.getVersion();
         final ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
         final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path);
         final Map<String, Object> data = new HashMap<>();
         data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
         data.put("version", version);
-        data.put("urlbase", urlBase);
         data.put("currenturl", currentUrl);
         data.put("currentUrlWithSeparator", currentUrlWithSeparator);
         data.put("relativePathToContextRoot", relativePathToContextRoot);
@@ -181,8 +179,7 @@ public class SingleVersionGenerator {
     }
 
     private void createLogMessagePage(Template template, List<LogMessage> messages) throws TemplateException, IOException {
-        final String urlBase = getUrlBase();
-        final String productHomeUrl = single ? urlBase : version.getProduct() + '/' + version.getVersion();
+        final String productHomeUrl = single ? "" : version.getProduct() + '/' + version.getVersion();
         final String currentUrl = buildCurrentUrl();
         final String currentUrlWithSeparator = currentUrl + (currentUrl.isEmpty() ? "" : "/");
         final String relativePathToContextRoot = createRelativePathToContextRoor(currentUrl);
@@ -190,7 +187,6 @@ public class SingleVersionGenerator {
         data.put("page", LOGS_HTML);
         data.put("versions", versions);
         data.put("version", version);
-        data.put("urlbase", urlBase);
         data.put("currentUrl", currentUrl);
         data.put("currentUrlWithSeparator", currentUrlWithSeparator);
         data.put("relativePathToContextRoot", relativePathToContextRoot);

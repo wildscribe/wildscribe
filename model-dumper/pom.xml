@@ -108,6 +108,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <configuration>
                     <executable>java</executable>
+                    <mainClass>org.jboss.wildscribe.modeldumper.Main</mainClass>
                     <arguments>
                         <argument>-jar</argument>
                         <argument>target/${project.build.finalName}.jar</argument>

@@ -34,7 +34,7 @@
     <name>Wildscribe Site Generator</name>
 
     <properties>
-        <versions.txt.dir>${project.parent.basedir}/models/standalone/full</versions.txt.dir>
+        <versions.txt.dir>${project.parent.basedir}/models/standalone</versions.txt.dir>
         <output.dir>${project.basedir}/target/wildscribe-generated</output.dir>
     </properties>
 

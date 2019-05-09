@@ -30,6 +30,7 @@ public class Main {
     public static void main(String[] params) throws Exception {
         if(params.length != 2) {
             System.out.println("Usage: dumper.jar path-to-modules output-file");
+            System.exit(1);
         }
         String path = params[0];
         List<LogMessage> messages = new ArrayList<>();

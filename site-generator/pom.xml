@@ -36,7 +36,7 @@
     <properties>
         <versions.txt.dir>${project.parent.basedir}/models/standalone</versions.txt.dir>
         <output.dir>${project.basedir}/target/wildscribe-generated</output.dir>
-        <PRODUCT_VERSION>JBoss-EAP-7.3.0.CD16</PRODUCT_VERSION>
+        <server.version/>
     </properties>
 
     <dependencies>
@@ -153,11 +153,11 @@
                             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                             <mergeUserSettings>true</mergeUserSettings>
                             <filterProperties>
-                                <PRODUCT_VERSION>${PRODUCT_VERSION}</PRODUCT_VERSION>
-                                <versions.txt.dir>${project.parent.basedir}/models/standalone/${PRODUCT_VERSION}.dmr</versions.txt.dir>
+                                <server.version>${server.version}</server.version>
+                                <versions.txt.dir>${project.parent.basedir}/models/standalone/${server.version}.dmr</versions.txt.dir>
                             </filterProperties>
                             <scriptVariables>
-                                <PRODUCT_VERSION>${PRODUCT_VERSION}</PRODUCT_VERSION>
+                                <server.version>${server.version}</server.version>
                             </scriptVariables>
                         </configuration>
                     </execution>

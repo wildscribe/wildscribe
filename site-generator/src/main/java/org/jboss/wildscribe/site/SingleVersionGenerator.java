@@ -2,6 +2,8 @@ package org.jboss.wildscribe.site;
 
 import static org.jboss.wildscribe.site.SiteGenerator.INDEX_HTML;
 
+import org.jboss.dmr.ModelNode;
+
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -17,8 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.jboss.dmr.ModelNode;
 
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import freemarker.template.Configuration;
@@ -103,30 +103,29 @@ public class SingleVersionGenerator {
 
     private void createResourcePage(ModelNode model, Template template, boolean hasLogs, PathElement... path) throws TemplateException, IOException {
         final String currentUrl = buildCurrentUrl(path);
-        final Map<String, Object> data = new HashMap<String, Object>();
+        final String relativePathToContextRoot = createRelativePathToContextRoor(currentUrl);
+        final String currentUrlWithSeparator = currentUrl + (currentUrl.isEmpty() ? "" : "/");
+        final String productHomeUrl = single ? "" : version.getProduct() + '/' + version.getVersion();
+        final ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
+        final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path);
+        final Map<String, Object> data = new HashMap<>();
         data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
         data.put("version", version);
-        data.put("urlbase", getUrlBase());
         data.put("currenturl", currentUrl);
+        data.put("currentUrlWithSeparator", currentUrlWithSeparator);
+        data.put("relativePathToContextRoot", relativePathToContextRoot);
         data.put("has_messages", hasLogs);
         data.put("globalCapabilities", capabilities);
-        if (single) {
-            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
-        } else {
-            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
-        }
-        ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
+        data.put("productHomeUrl", productHomeUrl);
         data.put("model", resourceDescription);
-
-        final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path);
         data.put("breadcrumbs", crumbs);
 
         File parent;
         if (single) {
             parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + currentUrl);
         } else {
-            parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + currentUrl);
+            parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + (currentUrl.isEmpty() || currentUrl.startsWith(File.separator)? "" : File.separator) + currentUrl);
         }
         parent.mkdirs();
         StringWriter stringWriter = new StringWriter();
@@ -170,18 +169,29 @@ public class SingleVersionGenerator {
 
     }
 
+    static String createRelativePathToContextRoor(String relativeUrl) {
+        StringBuilder sb = new StringBuilder();
+        int length = relativeUrl.isEmpty() ? 0 : relativeUrl.split("/").length;
+        for (int i = 0; i < length; i++) {
+            sb.append("../");
+        }
+        return sb.toString();
+    }
+
     private void createLogMessagePage(Template template, List<LogMessage> messages) throws TemplateException, IOException {
-        final Map<String, Object> data = new HashMap<String, Object>();
+        final String productHomeUrl = single ? "" : version.getProduct() + '/' + version.getVersion();
+        final String currentUrl = buildCurrentUrl();
+        final String currentUrlWithSeparator = currentUrl + (currentUrl.isEmpty() ? "" : "/");
+        final String relativePathToContextRoot = createRelativePathToContextRoor(currentUrl);
+        final Map<String, Object> data = new HashMap<>();
         data.put("page", LOGS_HTML);
         data.put("versions", versions);
         data.put("version", version);
-        data.put("urlbase", getUrlBase());
+        data.put("currentUrl", currentUrl);
+        data.put("currentUrlWithSeparator", currentUrlWithSeparator);
+        data.put("relativePathToContextRoot", relativePathToContextRoot);
         data.put("globalCapabilities", capabilities);
-        if (single) {
-            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
-        } else {
-            data.put("productHomeUrl", version.getProduct() + '/' + version.getVersion());
-        }
+        data.put("productHomeUrl", productHomeUrl);
 
         Map<String, List<DisplayMessage>> map = new TreeMap<>();
         for (LogMessage msg : messages) {
@@ -229,13 +239,18 @@ public class SingleVersionGenerator {
     private List<Breadcrumb> buildBreadcrumbs(Version version, PathElement[] path) {
         final List<Breadcrumb> crumbs = new ArrayList<>();
         crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), "index.html"));
-        StringBuilder currentUrl = new StringBuilder();
+        StringBuilder currentUrl = new StringBuilder("");
         for (PathElement i : path) {
-            currentUrl.append("/").append(i.getKey());
+            if (!currentUrl.toString().isEmpty()) {
+                currentUrl.append("/");
+            }
+            currentUrl.append(i.getKey());
             if (!i.isWildcard()) {
                 currentUrl.append("/").append(i.getValue());
             }
-            crumbs.add(new Breadcrumb(i.getKey() + (i.isWildcard() ? "" : ("=" + i.getValue())), currentUrl.toString() + "/index.html"));
+            final String label = i.getKey() + (i.isWildcard() ? "" : ("=" + i.getValue()));
+            String url = currentUrl.toString();
+            crumbs.add(new Breadcrumb(label, url + (url.isEmpty() ? "" : "/") + "index.html"));
         }
         return crumbs;
     }
@@ -243,7 +258,9 @@ public class SingleVersionGenerator {
     private String buildCurrentUrl(final PathElement... path) {
         StringBuilder sb = new StringBuilder();
         for (PathElement i : path) {
-            sb.append('/');
+            if (!sb.toString().isEmpty()) {
+                sb.append('/');
+            }
             sb.append(i.getKey());
             if (!i.isWildcard()) {
                 sb.append('/');

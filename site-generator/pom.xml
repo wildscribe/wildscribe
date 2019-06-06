@@ -36,6 +36,7 @@
     <properties>
         <versions.txt.dir>${project.parent.basedir}/models/standalone</versions.txt.dir>
         <output.dir>${project.basedir}/target/wildscribe-generated</output.dir>
+        <PRODUCT_VERSION>JBoss-EAP-7.3.0.CD16</PRODUCT_VERSION>
     </properties>
 
     <dependencies>
@@ -133,13 +134,34 @@
                         <argument>${versions.txt.dir}</argument>
                         <argument>${output.dir}</argument>
                     </arguments>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>url</key>
-                            <value>http://wildscribe.github.io</value>
-                        </systemProperty>
-                    </systemProperties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-single-version</id>
+                        <goals>
+                            <goal>install</goal>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <projectsDirectory>src/it</projectsDirectory>
+                            <localRepositoryPath>target/local-repo</localRepositoryPath>
+                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                            <mergeUserSettings>true</mergeUserSettings>
+                            <filterProperties>
+                                <PRODUCT_VERSION>${PRODUCT_VERSION}</PRODUCT_VERSION>
+                                <versions.txt.dir>${project.parent.basedir}/models/standalone/${PRODUCT_VERSION}.dmr</versions.txt.dir>
+                            </filterProperties>
+                            <scriptVariables>
+                                <PRODUCT_VERSION>${PRODUCT_VERSION}</PRODUCT_VERSION>
+                            </scriptVariables>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

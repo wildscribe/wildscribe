@@ -64,6 +64,8 @@
         <version.org.jboss.dmr>1.4.1.Final</version.org.jboss.dmr>
         <version.org.wildfly.core>2.2.0.Final</version.org.wildfly.core>
 
+        <version.invoker.plugin>3.2.0</version.invoker.plugin>
+
         <!-- Surefire args -->
         <surefire.jpda.args/>
         <surefire.system.args>-ea ${surefire.jpda.args}</surefire.system.args>

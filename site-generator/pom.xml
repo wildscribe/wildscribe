@@ -139,7 +139,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>${version.invoker.plugin}</version>
                 <executions>
                     <execution>
                         <id>generate-single-version</id>

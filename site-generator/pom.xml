@@ -30,7 +30,7 @@
     </parent>
 
     <artifactId>wildscribe-site-generator</artifactId>
-  
+
     <name>Wildscribe Site Generator</name>
 
     <properties>
@@ -136,34 +136,51 @@
                     </arguments>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <version>${version.invoker.plugin}</version>
-                <executions>
-                    <execution>
-                        <id>generate-single-version</id>
-                        <goals>
-                            <goal>install</goal>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <projectsDirectory>src/it</projectsDirectory>
-                            <localRepositoryPath>target/local-repo</localRepositoryPath>
-                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-                            <mergeUserSettings>true</mergeUserSettings>
-                            <filterProperties>
-                                <server.version>${server.version}</server.version>
-                                <versions.txt.dir>${project.parent.basedir}/models/standalone/${server.version}.dmr</versions.txt.dir>
-                            </filterProperties>
-                            <scriptVariables>
-                                <server.version>${server.version}</server.version>
-                            </scriptVariables>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>single-version</id>
+            <activation>
+                <property>
+                    <name>server.version</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-invoker-plugin</artifactId>
+                        <version>${version.invoker.plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>generate-single-version</id>
+                                <goals>
+                                    <goal>install</goal>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <projectsDirectory>src/it</projectsDirectory>
+                                    <localRepositoryPath>target/local-repo</localRepositoryPath>
+                                    <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                                    <mergeUserSettings>true</mergeUserSettings>
+                                    <filterProperties>
+                                        <server.version>${server.version}</server.version>
+                                        <versions.txt.dir>
+                                            ${project.parent.basedir}/models/standalone/${server.version}.dmr
+                                        </versions.txt.dir>
+                                    </filterProperties>
+                                    <scriptVariables>
+                                        <server.version>${server.version}</server.version>
+                                    </scriptVariables>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

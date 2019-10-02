@@ -1,3 +1,4 @@
+WildFly:18.0:WildFly-18.0.0.Final.dmr
 WildFly:17.0:WildFly-17.0.0.Final.dmr
 WildFly:16.0:WildFly-16.0.0.Final.dmr
 WildFly:15.0:WildFly-15.0.0.Final.dmr

@@ -11,7 +11,7 @@ stage it should be possible to generate diff's of the models.
 Add additional subsystems
 =====================
 
-$JBOSS_HOME/bin/jboss-cli.sh -c --commands=/extension=org.wildfly.extension.rts:add,/extension=org.jboss.as.xts:add,/extension=org.wildfly.extension.datasources-agroal:add
+$JBOSS_HOME/bin/jboss-cli.sh -c --commands=/extension=org.wildfly.extension.rts:add,/extension=org.jboss.as.xts:add,/extension=org.wildfly.extension.datasources-agroal:add,/extension=org.jboss.as.clustering.jgroups:add
 
 Dumping models
 =======================

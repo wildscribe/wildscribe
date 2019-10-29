@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>24</version>
+        <version>36</version>
         <relativePath/>
     </parent>
 
@@ -42,7 +42,7 @@
 
     <licenses>
         <license>
-            <name>Apache License Version 2.0</name>
+            <name>Apache License 2.0</name>
             <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
@@ -60,11 +60,11 @@
             For example: <version.org.jboss.as.console>
          -->
         <version.junit>4.11</version.junit>
-        <version.org.freemarker>2.3.26-incubating</version.org.freemarker>
-        <version.org.jboss.dmr>1.4.1.Final</version.org.jboss.dmr>
-        <version.org.wildfly.core>2.2.0.Final</version.org.wildfly.core>
+        <version.org.freemarker>2.3.29</version.org.freemarker>
+        <version.org.jboss.dmr>1.5.0.Final</version.org.jboss.dmr>
+        <version.org.wildfly.core>10.0.0.Final</version.org.wildfly.core>
 
-        <version.invoker.plugin>3.2.0</version.invoker.plugin>
+        <version.invoker.plugin>3.2.1</version.invoker.plugin>
 
         <!-- Surefire args -->
         <surefire.jpda.args/>
@@ -87,25 +87,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-java</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>1.8</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -114,7 +95,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${version.checkstyle.plugin}</version>
                     <configuration>
                         <configLocation>wildfly-checkstyle/checkstyle.xml</configLocation>
                         <consoleOutput>true</consoleOutput>
@@ -126,7 +106,7 @@
                         <dependency>
                             <groupId>org.wildfly.checkstyle</groupId>
                             <artifactId>wildfly-checkstyle-config</artifactId>
-                            <version>1.0.6.Final</version>
+                            <version>1.0.8.Final</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -138,40 +118,6 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <!--suppress MavenModelInspection -->
-                    <groupId>org.eclipse.m2e</groupId>
-                    <!--suppress MavenModelInspection -->
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <!--suppress MavenModelInspection -->
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.apache.maven.plugins
-                                        </groupId>
-                                        <artifactId>
-                                            maven-checkstyle-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [2.5,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>checkstyle</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -220,36 +166,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <repositories>
-        <repository>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>

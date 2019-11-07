@@ -61,8 +61,11 @@
          -->
         <version.junit>4.11</version.junit>
         <version.org.freemarker>2.3.29</version.org.freemarker>
+        <version.org.javassist>3.26.0-GA</version.org.javassist>
         <version.org.jboss.dmr>1.5.0.Final</version.org.jboss.dmr>
+        <version.org.jboss.logging.jboss-logging>3.4.1.Final</version.org.jboss.logging.jboss-logging>
         <version.org.wildfly.core>10.0.0.Final</version.org.wildfly.core>
+        <version.org.wildfly.plugins>2.0.1.Final</version.org.wildfly.plugins>
 
         <version.invoker.plugin>3.2.1</version.invoker.plugin>
 
@@ -149,9 +152,21 @@
             </dependency>
 
             <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${version.org.javassist}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.jboss</groupId>
                 <artifactId>jboss-dmr</artifactId>
                 <version>${version.org.jboss.dmr}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+                <version>${version.org.jboss.logging.jboss-logging}</version>
             </dependency>
 
             <dependency>
@@ -159,6 +174,13 @@
                 <artifactId>wildfly-controller-client</artifactId>
                 <version>${version.org.wildfly.core}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-plugin-core</artifactId>
+                <version>${version.org.wildfly.plugins}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.googlecode.htmlcompressor</groupId>
                 <artifactId>htmlcompressor</artifactId>

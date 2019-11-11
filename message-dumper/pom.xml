@@ -12,7 +12,6 @@
     </parent>
     <artifactId>message-dumper</artifactId>
     <build>
-        <finalName>message-dumper</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

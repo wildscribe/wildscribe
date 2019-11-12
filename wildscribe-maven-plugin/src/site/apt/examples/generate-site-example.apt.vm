@@ -1,0 +1,39 @@
+ ------
+ Generate Site Example
+ ------
+ James R. Perkins
+ ------
+ 2019-11-11
+ ------
+
+Generate Site Examples
+
+  Generates Wildscribe site for a ${appServerName} server.
+
+* Generate Site Example
+
+  The example below shows how to generate a Wildscribe site:
+
+----------
+<project>
+    ...
+    <build>
+        ...
+        <plugins>
+            ...
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>${project.artifactId}</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <jboss-home>target/${appServerName}
+                    <site-dir>target/generated-docs/wildscribe</site-dir>
+                </configuration>
+            </plugin>
+            ...
+        </plugins>
+        ...
+    </build>
+...
+</project>
+----------

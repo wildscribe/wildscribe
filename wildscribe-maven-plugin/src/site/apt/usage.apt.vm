@@ -1,0 +1,23 @@
+ ------
+ Usage
+ ------
+ James R. Perkins
+ ------
+ 2019-11-11
+ ------
+
+Usage
+
+  The ${project.name} is used to generate a Wildscribe site for a ${appServerName} server. The <<<jboss-home>>>
+  parameter is used to start the server and generate a site based on that server.
+
+* The <<<${pluginPrefix}:generate-site>>> Goal
+
+  The <<<${pluginPrefix}:generate-site>>> goal generates a Wildscribe site for the ${appServerName} defined by the
+  <<<jboss-home>>> configuration parameter.
+
+  For example to add a resource you type the following on the command line:
+
++-----+
+mvn ${pluginPrefix}:generate-site
++-----+

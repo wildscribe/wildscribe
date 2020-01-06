@@ -18,15 +18,9 @@
 
 package org.jboss.wildscribe.site;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.CopyOption;
 import java.nio.file.FileVisitResult;
@@ -40,71 +34,83 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.jboss.logging.Logger;
+
 /**
  * @author Stuart Douglas
  */
-public class FileUtils {
+class FileUtils {
+
+    private static final Logger LOGGER = Logger.getLogger(FileUtils.class.getPackage().getName());
 
     private FileUtils() {
 
     }
 
-    public static String readFile(Class<?> testClass, String fileName) {
-        final URL res = testClass.getResource(fileName);
-        return readFile(res);
+    static Path getUserHome() {
+        return Paths.get(System.getProperty("user.home"));
     }
 
-    public static String readFile(URL url) {
-        try {
-            return readFile(url.openStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String readFile(final File file) {
-        try {
-            return readFile(new FileInputStream(file));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String readFile(InputStream file) {
-        BufferedInputStream stream = null;
-        try {
-            stream = new BufferedInputStream(file);
-            byte[] buff = new byte[1024];
-            StringBuilder builder = new StringBuilder();
-            int read = -1;
-            while ((read = stream.read(buff)) != -1) {
-                builder.append(new String(buff, 0, read));
+    static Path getPath(final String path) {
+        if (path.charAt(0) == '~') {
+            if (path.charAt(1) == File.separatorChar) {
+                return getUserHome().resolve(path.substring(2)).toAbsolutePath();
+            } else {
+                return getUserHome().resolve(path.substring(1)).toAbsolutePath();
             }
-            return builder.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    //ignore
+        }
+        return Paths.get(path);
+    }
+
+    static Path createTempDir(final String path) {
+        return Paths.get(System.getProperty("java.io.tmpdir"), path);
+    }
+
+    static void delete(final Path dir, final boolean ignoreHidden) throws IOException {
+        Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
+                return Files.isHidden(dir) && ignoreHidden ? FileVisitResult.SKIP_SUBTREE : FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+                if (!(Files.isHidden(file) && ignoreHidden)) {
+                    Files.delete(file);
                 }
+                return FileVisitResult.CONTINUE;
             }
+
+            @Override
+            public FileVisitResult postVisitDirectory(final Path d, final IOException exc) throws IOException {
+                if (!dir.equals(d)) {
+                    Files.delete(d);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    static Path copyDirectoryFromJar(final URL resource) throws IOException {
+        final Path tmpDir = FileUtils.createTempDir("wildscribe_templates");
+        if (Files.exists(tmpDir)) {
+            delete(tmpDir, false);
         }
+        copyDirectoryFromJar(resource, tmpDir);
+        return tmpDir;
     }
 
-    public static void copyDirectory(final Path src, final Path dest) throws IOException {
-        Files.walkFileTree(src, new CopyDirVisitor(src, dest, StandardCopyOption.REPLACE_EXISTING));
-    }
 
-
-    public static void copyDirectoryFromJar(final URL resource, final Path dest) throws Exception {
-        System.out.println(resource + " ---- " + dest);
-        if (resource.getProtocol().equals("file")) {
-
-            copyDirectory(Paths.get(resource.toURI()), dest);
-        } else if (resource.getProtocol().equals("jar")) {
+    static void copyDirectoryFromJar(final URL resource, final Path dest) throws IOException {
+        LOGGER.debugf("Copying %s to %s", resource, dest);
+        if ("file".equals(resource.getProtocol())) {
+            try {
+                final Path src = Paths.get(resource.toURI());
+                Files.walkFileTree(src, new CopyDirVisitor(src, dest, StandardCopyOption.REPLACE_EXISTING));
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        } else if ("jar".equals(resource.getProtocol())) {
             int endIndex = resource.getFile().indexOf('!');
             JarFile file = new JarFile(resource.getFile().substring(5, endIndex));
             String path = resource.getPath().substring(endIndex + 2);
@@ -113,7 +119,7 @@ public class FileUtils {
                 JarEntry entry = entries.nextElement();
                 if (!entry.isDirectory()) {
                     if (entry.getName().startsWith(path)) {
-                        System.out.println(entry.getName().substring(path.length() + 1));
+                        LOGGER.debugf("Copying %s", entry.getName().substring(path.length() + 1));
                         Path fileDest = dest.resolve(entry.getName().substring(path.length() + 1));
                         if (Files.notExists(fileDest.getParent())) {
                             Files.createDirectories(fileDest.getParent());
@@ -127,35 +133,12 @@ public class FileUtils {
         }
     }
 
-    public static void copyFile(final File src, final File dest) throws IOException {
-        final InputStream in = new BufferedInputStream(new FileInputStream(src));
-        try {
-            copyFile(in, dest);
-        } finally {
-            close(in);
-        }
-    }
-
-    public static void copyFile(final InputStream in, final File dest) throws IOException {
-        dest.getParentFile().mkdirs();
-        final OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
-        try {
-            int i = in.read();
-            while (i != -1) {
-                out.write(i);
-                i = in.read();
-            }
-        } finally {
-            close(out);
-        }
-    }
-
-    public static class CopyDirVisitor extends SimpleFileVisitor<Path> {
+    private static class CopyDirVisitor extends SimpleFileVisitor<Path> {
         private final Path fromPath;
         private final Path toPath;
         private final CopyOption copyOption;
 
-        public CopyDirVisitor(Path fromPath, Path toPath, CopyOption copyOption) {
+        CopyDirVisitor(Path fromPath, Path toPath, CopyOption copyOption) {
             this.fromPath = fromPath;
             this.toPath = toPath;
             this.copyOption = copyOption;
@@ -175,23 +158,6 @@ public class FileUtils {
             Files.copy(file, toPath.resolve(fromPath.relativize(file)), copyOption);
             return FileVisitResult.CONTINUE;
         }
-    }
-
-    public static void close(Closeable closeable) {
-        try {
-            closeable.close();
-        } catch (IOException ignore) {
-        }
-    }
-
-    public static void deleteRecursive(final File file) {
-        File[] files = file.listFiles();
-        if (files != null) {
-            for (File f : files) {
-                deleteRecursive(f);
-            }
-        }
-        file.delete();
     }
 
 }

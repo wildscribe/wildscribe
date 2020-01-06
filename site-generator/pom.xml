@@ -49,12 +49,16 @@
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>3.22.0-GA</version>
         </dependency>
 
         <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jboss-dmr</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
         </dependency>
 
         <dependency>
@@ -72,7 +76,6 @@
     </dependencies>
 
     <build>
-        <finalName>site-generator</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

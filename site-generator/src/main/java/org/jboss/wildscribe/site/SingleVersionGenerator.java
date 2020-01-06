@@ -28,7 +28,7 @@ import freemarker.template.TemplateException;
 /**
  * @author Tomaz Cerar (c) 2017 Red Hat Inc.
  */
-public class SingleVersionGenerator {
+class SingleVersionGenerator {
     public static final String RESOURCE_HTML = "resource.html";
     private static final String LOG_MESSAGE_REFERENCE_HTML = "log-message-reference.html";
     private static final String LOGS_HTML = "logs.html";
@@ -41,7 +41,7 @@ public class SingleVersionGenerator {
     private boolean single = false;
 
 
-    public SingleVersionGenerator(List<Version> versions, Version version, Configuration configuration, Path outputDir, String layoutHtml) {
+    SingleVersionGenerator(List<Version> versions, Version version, Configuration configuration, Path outputDir, String layoutHtml) {
         this.versions = versions;
         this.version = version;
         this.configuration = configuration;
@@ -146,7 +146,6 @@ public class SingleVersionGenerator {
                     if (childModel.hasDefined("model-description")) {
                         ModelNode newModel = childModel.get("model-description").get("*");
                         if (!newModel.hasDefined("operations")) {
-                            //System.out.println(String.format("resource '%s' is missing operations node", Arrays.asList(newPath)));
                             newModel.get("operations");
                         }
                         createResourcePage(newModel, template, false, newPath);

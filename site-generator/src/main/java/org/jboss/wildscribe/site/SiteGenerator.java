@@ -1,7 +1,5 @@
 package org.jboss.wildscribe.site;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -14,20 +12,21 @@ import java.util.Map;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.jboss.dmr.ModelNode;
+import org.jboss.logging.Logger;
 
 /**
  * class Responsible for generating sites
  *
  * @author Stuart Douglas
  */
-public class SiteGenerator {
+class SiteGenerator {
+    private static final Logger LOGGER = Logger.getLogger(SiteGenerator.class.getPackage().getName());
+    private static final String DEFAULT_LAYOUT_HTML = "layout.html";
+    private static final String SINGLE_LAYOUT_HTML = "single-layout.html";
 
     public static final String INDEX_HTML = "index.html";
     public static final String ABOUT_HTML = "about.html";
     public static final String RESOURCE_HTML = "resource.html";
-    public final String layoutHtml;
-    private final File singlePageDmr;
     private final List<Version> versions;
     private final Configuration configuration;
     private final Path outputDir;
@@ -36,20 +35,10 @@ public class SiteGenerator {
         this.versions = versions;
         this.configuration = configuration;
         this.outputDir = outputDir;
-        layoutHtml = "layout.html";
-        this.singlePageDmr = null;
-    }
-
-    public SiteGenerator(File single, Configuration configuration, Path outputDir) {
-        this.versions = null;
-        this.configuration = configuration;
-        this.outputDir = outputDir;
-        layoutHtml = "single-layout.html";
-        this.singlePageDmr = single;
     }
 
     public void createMainPage() throws IOException, TemplateException {
-        Template template = configuration.getTemplate(layoutHtml);
+        Template template = configuration.getTemplate(DEFAULT_LAYOUT_HTML);
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", INDEX_HTML);
         data.put("versions", versions);
@@ -59,10 +48,9 @@ public class SiteGenerator {
         boolean as7 = false;
         assert versions != null;
 
-        Version eap7 = versions.stream().filter(version -> version.getProduct().equals(Version.JBOSS_EAP))
+        versions.stream().filter(version -> version.getProduct().equals(Version.JBOSS_EAP))
                 .filter(version -> version.getVersion().startsWith("7"))
-                .findFirst().get();
-        data.put("eap7", eap7);
+                .findFirst().ifPresent(v -> data.put("eap7", v));
 
         for (Version version : versions) {
             if (version.getProduct().equals(Version.JBOSS_AS7) && !as7) {
@@ -83,7 +71,7 @@ public class SiteGenerator {
     }
 
     public void createAboutPage() throws IOException, TemplateException {
-        Template template = configuration.getTemplate(layoutHtml);
+        Template template = configuration.getTemplate(DEFAULT_LAYOUT_HTML);
         final Map<String, Object> data = new HashMap<String, Object>();
         data.put("page", ABOUT_HTML);
         data.put("versions", versions);
@@ -94,35 +82,18 @@ public class SiteGenerator {
 
     public void createVersions() throws IOException, TemplateException {
         for (Version version : versions) {
-            System.out.println("Processing " + version.getProduct() + " " + version.getVersion());
-            new SingleVersionGenerator(versions, version, configuration, outputDir, layoutHtml).generate();
+            LOGGER.infof("Processing %s %s", version.getProduct(), version.getVersion());
+            new SingleVersionGenerator(versions, version, configuration, outputDir, DEFAULT_LAYOUT_HTML).generate();
 
         }
     }
 
 
     public void createSingleVersion() throws IOException, TemplateException {
-        final ModelNode model = new ModelNode();
-        model.readExternal(new FileInputStream(singlePageDmr));
-        Version v = readVersionFromDmr(model);
-
-        SingleVersionGenerator gen = new SingleVersionGenerator(versions, v, configuration, outputDir, layoutHtml);
+        SingleVersionGenerator gen = new SingleVersionGenerator(null, versions.get(0), configuration, outputDir, SINGLE_LAYOUT_HTML);
         gen.setSingle(true);
         gen.generate();
     }
-
-
-    private Version readVersionFromDmr(ModelNode fullModel) {
-        if (!fullModel.hasDefined("version-info")) {
-            return new Version("unknown", "unknown", singlePageDmr);
-        }
-        ModelNode model = fullModel.get("version-info");
-        String productName = model.get("product-name").asString();
-        String productVersion = model.get("product-version").asString();
-        return new Version(productName, productVersion, singlePageDmr);
-
-    }
-
 
     private String getUrlBase() {
         if (System.getProperty("url") == null) {

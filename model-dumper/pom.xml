@@ -51,7 +51,6 @@
     </dependencies>
 
     <build>
-        <finalName>model-dumper</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

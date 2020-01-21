@@ -109,6 +109,20 @@ public class GenerateSiteMojo extends AbstractMojo {
     private String siteDir;
 
     /**
+     * This is only used for a single version and will be used for the displayed name. If left {@code null} the name
+     * will be resolved from the running server.
+     */
+    @Parameter(alias = "display-name", property = "wildscribe.display.name")
+    private String displayName;
+
+    /**
+     * This is only used for a single version and will be used for the displayed version. If left {@code null} the
+     * version will be resolved from the running server.
+     */
+    @Parameter(alias = "display-version", property = "wildscribe.display.version")
+    private String displayVersion;
+
+    /**
      * The extensions that are required to be installed before the model is dumped. If any of these extensions do not
      * already exist on the server then they will be added.
      */
@@ -160,7 +174,7 @@ public class GenerateSiteMojo extends AbstractMojo {
                 if (Files.notExists(siteTarget)) {
                     Files.createDirectories(siteTarget);
                 }
-                Generator.generate(dmrFile, siteTarget);
+                Generator.generate(dmrFile, siteTarget, displayName, displayVersion);
             }
         } catch (IOException | InterruptedException | TimeoutException e) {
             throw new MojoExecutionException("Failed to generate the Wildscribe sight.", e);

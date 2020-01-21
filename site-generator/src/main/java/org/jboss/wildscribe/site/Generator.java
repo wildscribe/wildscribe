@@ -72,11 +72,48 @@ public class Generator {
      * @throws IOException if an error occurs generating the site
      */
     public static Path generate(final Path modelPath, final Path target) throws IOException {
+        return generate(modelPath, target, null, null);
+    }
+
+    /**
+     * Generates a site based on the {@code modelPath} in the target directory.
+     * <p>
+     * If the {@code modelPath} is a directory it must contain a file named {@code version.txt}. This file is
+     * delimited with {@code :} on each line where the first value is the product name, the second value is the version
+     * and the third value is the path to the DMR file.
+     * </p>
+     * <p>
+     * Example file contents:
+     * <pre>
+     * {@code
+     * WildFly:18.0.0.Final:./WildFly-18.0.0.Final.dmr
+     * WildFly:17.0.0.Final:WildFly-17.0.0.Final.dmr
+     * }
+     * </pre>
+     * </p>
+     *
+     * <p>
+     * Note the {@code displayName} and {@code displayVersion} are only used if the {@code modulePath} is not a
+     * directory. If the module path is a directory the name and version are resolved from the {@code version.txt} file.
+     * </p>
+     *
+     * @param modelPath      the path to the model file or a directory with a {@code verions.txt} file
+     * @param target         the target directory to generate the site in
+     * @param displayName    the name that should be used for the display, or {@code null} to resolve the display name
+     * @param displayVersion the version that should be used for the display, or {@code null} to resolve the display
+     *                       version
+     *
+     * @return the path to the directory the site was generated in
+     *
+     * @throws IOException if an error occurs generating the site
+     */
+    public static Path generate(final Path modelPath, final Path target, final String displayName,
+                                final String displayVersion) throws IOException {
         final List<Version> versions;
         if (Files.isDirectory(Objects.requireNonNull(modelPath, "The target cannot be null."))) {
             versions = loadVersions(modelPath);
         } else {
-            versions = Collections.singletonList(readVersionFromDmr(modelPath));
+            versions = Collections.singletonList(resolveVersion(modelPath, displayName, displayVersion));
         }
         return generate(versions, target);
     }
@@ -106,6 +143,43 @@ public class Generator {
      * @throws IOException if an error occurs generating the site
      */
     public static Path generate(final Collection<Path> modelPaths, final Path target) throws IOException {
+        return generate(modelPaths, target, null, null);
+    }
+
+    /**
+     * Generates a site based on the {@code modelPaths} in the target directory.
+     * <p>
+     * If any of the {@code modelPaths} are directories they must contain a file named {@code version.txt}. This file is
+     * delimited with {@code :} on each line where the first value is the product name, the second value is the version
+     * and the third value is the path to the DMR file.
+     * </p>
+     * <p>
+     * Example file contents:
+     * <pre>
+     * {@code
+     * WildFly:18.0.0.Final:./WildFly-18.0.0.Final.dmr
+     * WildFly:17.0.0.Final:WildFly-17.0.0.Final.dmr
+     * }
+     * </pre>
+     * </p>
+     *
+     * <p>
+     * Note the {@code displayName} and {@code displayVersion} are only used if the module path is not a
+     * directory. If the module path is a directory the name and version are resolved from the {@code version.txt} file.
+     * </p>
+     *
+     * @param modelPaths     the paths to process
+     * @param target         the target directory to generate the site in
+     * @param displayName    the name that should be used for the display, or {@code null} to resolve the display name
+     * @param displayVersion the version that should be used for the display, or {@code null} to resolve the display
+     *                       version
+     *
+     * @return the path to the directory the site was generated in
+     *
+     * @throws IOException if an error occurs generating the site
+     */
+    public static Path generate(final Collection<Path> modelPaths, final Path target, final String displayName,
+                                final String displayVersion) throws IOException {
         if (modelPaths.isEmpty()) {
             throw new IllegalArgumentException("No module paths were defined.");
         }
@@ -115,11 +189,11 @@ public class Generator {
                 if (Files.isDirectory(modelPath)) {
                     versions.addAll(loadVersions(modelPath));
                 } else {
-                    versions.add(readVersionFromDmr(modelPath));
+                    versions.add(resolveVersion(modelPath, displayName, displayVersion));
                 }
             }
         } else {
-            versions.add(readVersionFromDmr(modelPaths.iterator().next()));
+            versions.add(resolveVersion(modelPaths.iterator().next(), displayName, displayVersion));
         }
         return generate(versions, target);
     }
@@ -153,7 +227,10 @@ public class Generator {
     }
 
 
-    private static Version readVersionFromDmr(final Path path) throws IOException {
+    private static Version resolveVersion(final Path path, final String displayName, final String displayVersion) throws IOException {
+        if (displayName != null && displayVersion != null) {
+            return new Version(displayName, displayVersion, path.toFile());
+        }
         final ModelNode fullModel = new ModelNode();
         try (InputStream in = Files.newInputStream(path)) {
             fullModel.readExternal(in);
@@ -162,8 +239,8 @@ public class Generator {
             return new Version("unknown", "unknown", path.toFile());
         }
         ModelNode model = fullModel.get("version-info");
-        String productName = model.get("product-name").asString();
-        String productVersion = model.get("product-version").asString();
+        String productName = displayName == null ? model.get("product-name").asString() : displayName;
+        String productVersion = displayVersion == null ? model.get("product-version").asString() : displayVersion;
         return new Version(productName, productVersion, path.toFile());
 
     }

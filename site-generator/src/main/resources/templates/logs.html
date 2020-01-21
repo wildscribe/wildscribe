@@ -1,4 +1,14 @@
-
+<ol class="breadcrumb">
+    <#list breadcrumbs as crumb>
+    <#if crumb_has_next>
+    <li class="breadcrumb-item">
+        <a href="${relativePathToContextRoot}${crumb.url}">${crumb.label}</a>
+    </li>
+    <#else>
+    <li class="breadcrumb-item active">${crumb.label}</li>
+</#if>
+</#list>
+</ol>
 
 <#list codes as code>
 <h3 class="text-muted">${code}</h3>

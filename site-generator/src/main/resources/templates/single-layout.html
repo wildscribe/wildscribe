@@ -15,6 +15,13 @@
 <body>
 
 <div class="container">
+    <div class="masthead">
+        <#if version??>
+        <h3 class="text-muted my-3">${version.product} ${version.version} Model Reference</h3>
+        <#else>
+        <h3 class="text-muted my-3">WildFly Model Reference</h3>
+        </#if>
+    </div>
     <#include page/>
     <hr>
 

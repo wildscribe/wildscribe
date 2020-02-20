@@ -26,7 +26,7 @@ Generate Site Examples
                 <artifactId>${project.artifactId}</artifactId>
                 <version>${project.version}</version>
                 <configuration>
-                    <jboss-home>target/${appServerName}
+                    <jboss-home>target/${appServerName}</jboss-home>
                     <site-dir>target/generated-docs/wildscribe</site-dir>
                 </configuration>
             </plugin>

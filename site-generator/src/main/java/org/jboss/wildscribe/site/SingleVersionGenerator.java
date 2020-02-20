@@ -107,7 +107,7 @@ class SingleVersionGenerator {
         final String currentUrlWithSeparator = currentUrl + (currentUrl.isEmpty() ? "" : "/");
         final String productHomeUrl = single ? "" : version.getProduct() + '/' + version.getVersion();
         final ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
-        final List<Breadcrumb> crumbs = buildBreadcrumbs(version, path);
+        final List<Breadcrumb> crumbs = buildBreadcrumbs(path);
         final Map<String, Object> data = new HashMap<>();
         data.put("page", RESOURCE_HTML);
         data.put("versions", versions);
@@ -191,6 +191,7 @@ class SingleVersionGenerator {
         data.put("relativePathToContextRoot", relativePathToContextRoot);
         data.put("globalCapabilities", capabilities);
         data.put("productHomeUrl", productHomeUrl);
+        data.put("breadcrumbs", buildBreadcrumbs(new PathElement[] {PathElement.pathElement("messages")}));
 
         Map<String, List<DisplayMessage>> map = new TreeMap<>();
         for (LogMessage msg : messages) {
@@ -235,9 +236,13 @@ class SingleVersionGenerator {
         return newPath;
     }
 
-    private List<Breadcrumb> buildBreadcrumbs(Version version, PathElement[] path) {
+    private List<Breadcrumb> buildBreadcrumbs(PathElement[] path) {
         final List<Breadcrumb> crumbs = new ArrayList<>();
-        crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), "index.html"));
+        if (single) {
+            crumbs.add(new Breadcrumb("home", INDEX_HTML));
+        } else {
+            crumbs.add(new Breadcrumb(version.getProduct() + " " + version.getVersion(), INDEX_HTML));
+        }
         StringBuilder currentUrl = new StringBuilder("");
         for (PathElement i : path) {
             if (!currentUrl.toString().isEmpty()) {
@@ -249,7 +254,7 @@ class SingleVersionGenerator {
             }
             final String label = i.getKey() + (i.isWildcard() ? "" : ("=" + i.getValue()));
             String url = currentUrl.toString();
-            crumbs.add(new Breadcrumb(label, url + (url.isEmpty() ? "" : "/") + "index.html"));
+            crumbs.add(new Breadcrumb(label, url + (url.isEmpty() ? "" : "/") + INDEX_HTML));
         }
         return crumbs;
     }

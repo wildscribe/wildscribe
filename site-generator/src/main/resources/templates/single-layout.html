@@ -15,11 +15,18 @@
 <body>
 
 <div class="container">
+    <div class="masthead">
+        <#if version??>
+        <h3 class="text-muted my-3">${version.product} ${version.version} Model Reference</h3>
+        <#else>
+        <h3 class="text-muted my-3">WildFly Model Reference</h3>
+        </#if>
+    </div>
     <#include page/>
     <hr>
 
     <footer>
-        <p>&copy; Red Hat 2019</p>
+        <p>&copy; Red Hat ${.now?string('yyyy')}</p>
     </footer>
 </div>
 <!-- /container -->

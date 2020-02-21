@@ -189,10 +189,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
-            <properties>
-                <plugin.site>${project.basedir}/../docs/</plugin.site>
-            </properties>
+            <id>generate-docs</id>
             <build>
                 <plugins>
                     <plugin>
@@ -203,6 +200,26 @@
                                 <phase>package</phase>
                                 <goals>
                                     <goal>site</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/../docs/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.reporting.outputDirectory}</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>copy-site</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
                                 </goals>
                             </execution>
                         </executions>

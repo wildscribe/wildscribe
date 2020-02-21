@@ -132,6 +132,24 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>org.jboss.wildscribe.site.Main</mainClass>
+                    <systemProperties>
+                        <property>
+                            <key>wildscribe.index.alert.header</key>
+                            <value>WildFly Model Reference Moved</value>
+                        </property>
+                        <property>
+                            <key>wildscribe.index.alert.message</key>
+                            <value>
+                                The WildFly Model References have moved to the
+                                &lt;a href=&quot;https://docs.wildfly.org&quot;&gt;WildFly documentation&lt;/a&gt;
+                                as of WildFly 19. Each model reference will be located under the versions documentation.
+                            </value>
+                        </property>
+                        <property>
+                            <key>wildscribe.index.alert.type</key>
+                            <value>info</value>
+                        </property>
+                    </systemProperties>
                     <arguments>
                         <argument>${versions.txt.dir}</argument>
                         <argument>${output.dir}</argument>

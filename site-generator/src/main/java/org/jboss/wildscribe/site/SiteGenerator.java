@@ -66,6 +66,16 @@ class SiteGenerator {
                 data.put("wildfly", version);
             }
         }
+        final String alertMessage = System.getProperty("wildscribe.index.alert.message");
+        if (alertMessage != null) {
+            final AlertMessage am = new AlertMessage();
+            final String dismissible = System.getProperty("wildscribe.index.alert.dismissible");
+            am.setDismissible(dismissible != null && dismissible.isEmpty() || Boolean.parseBoolean(dismissible));
+            am.setHeader(System.getProperty("wildscribe.index.alert.header"));
+            am.setMessage(alertMessage);
+            am.setType(System.getProperty("wildscribe.index.alert.type"));
+            data.put("alertMessage", am);
+        }
 
         template.process(data, new PrintWriter(Files.newBufferedWriter(outputDir.resolve(INDEX_HTML), StandardCharsets.UTF_8)));
     }

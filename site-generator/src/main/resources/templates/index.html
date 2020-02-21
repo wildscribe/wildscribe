@@ -1,3 +1,17 @@
+<#if alertMessage??>
+<div class="alert alert-${alertMessage.type}">
+    <#if alertMessage.dismissible>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    </#if>
+    <#if alertMessage.header??>
+    <h4 class="alert-heading">${alertMessage.header}</h4>
+    </#if>
+    <p>${alertMessage.message}</p>
+</div>
+</#if>
+
 <div class="jumbotron">
     <h1 class="display-3">WildFly Model Reference Documentation</h1>
 

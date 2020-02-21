@@ -244,6 +244,18 @@
                                         </td>
                                     </tr>
                                 </#if>
+                                <#if attribute.allowedValues?size != 0>
+                                    <tr>
+                                        <td>
+                                            <b>Allowed Values</b>
+                                        </td>
+                                        <td>
+                                            <#list attribute.allowedValues as allowedValue>
+                                                ${allowedValue}<br/>
+                                            </#list>
+                                        </td>
+                                    </tr>
+                                </#if>
                             </table>
                             </div>
                         </div>

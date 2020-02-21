@@ -1,5 +1,9 @@
 package org.jboss.wildscribe.site;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.Property;
 
 /**
@@ -20,6 +24,7 @@ public class Attribute implements Comparable<Attribute> {
     private final String unit;
     private final String restartRequired;
     private final String capabilityReference;
+    private final Collection<String> allowedValues;
 
     public Attribute(String name, String description, String type, boolean nillable, boolean expressionsAllowed, String defaultValue, Integer min, Integer max, String accessType, String storage, Deprecated deprecated, String unit, String restartRequired, String capabilityReference) {
         this.name = name;
@@ -36,6 +41,7 @@ public class Attribute implements Comparable<Attribute> {
         this.unit = unit;
         this.restartRequired = restartRequired;
         this.capabilityReference = capabilityReference;
+        allowedValues = new ArrayList<>();
     }
 
     public String getName() {
@@ -99,6 +105,10 @@ public class Attribute implements Comparable<Attribute> {
         return capabilityReference;
     }
 
+    public Collection<String> getAllowedValues() {
+        return allowedValues;
+    }
+
     public static Attribute fromProperty(final Property property) {
         String name = property.getName();
         String description = property.getValue().get("description").asString();
@@ -132,6 +142,11 @@ public class Attribute implements Comparable<Attribute> {
         String restartRequired = property.getValue().get("restart-required").asStringOrNull();
         String capabilityReference = property.getValue().get("capability-reference").asStringOrNull();
         Attribute op = new Attribute(name, description, type, nilable, expressionsAllowed, defaultValue, min, max, accessType, storage, Deprecated.fromModel(property.getValue()), unit, restartRequired, capabilityReference);
+        if (property.getValue().hasDefined("allowed")) {
+            for (ModelNode allowed : property.getValue().get("allowed").asList()) {
+                op.allowedValues.add(allowed.asString());
+            }
+        }
         return op;
     }
 }

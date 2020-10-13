@@ -59,7 +59,7 @@
             versions, add the artifactId or other qualifier to the property name.
             For example: <version.org.jboss.as.console>
          -->
-        <version.junit>4.12</version.junit>
+        <version.junit>4.13.1</version.junit>
         <version.org.freemarker>2.3.29</version.org.freemarker>
         <version.org.javassist>3.26.0-GA</version.org.javassist>
         <version.org.jboss.dmr>1.5.0.Final</version.org.jboss.dmr>

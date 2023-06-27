@@ -3,13 +3,30 @@ package org.jboss.wildscribe.modeldumper;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jboss.dmr.ModelNode;
 
 public class Main {
-    private static final List<String> REQUIRED_EXTENSIONS = Arrays.asList("org.wildfly.extension.datasources-agroal", "org.wildfly.extension.rts", "org.jboss.as.xts", "org.jboss.as.clustering.jgroups");
+
+    // Constants are package protected for unit testing
+    static final String REQUIRED_EXTENSIONS_PROPERTY = "org.jboss.wildscribe.moduledumper.required-extensions";
+    static final List<String> REQUIRED_EXTENSIONS;
+
+    static {
+        String required = System.getProperty(REQUIRED_EXTENSIONS_PROPERTY);
+        if (required != null && !required.isEmpty()) {
+            List<String> requiredList = new ArrayList<>();
+            for (String s : required.split(",")) {
+                requiredList.add(s.trim());
+            }
+            REQUIRED_EXTENSIONS = Collections.unmodifiableList(requiredList);
+        } else {
+            REQUIRED_EXTENSIONS = Collections.emptyList();
+        }
+    }
 
     public static void main(final String[] args) throws IOException {
 

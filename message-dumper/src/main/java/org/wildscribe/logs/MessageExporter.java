@@ -29,11 +29,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
@@ -65,7 +66,7 @@ public class MessageExporter {
      */
     public static Path export(final Path modulesDir, final Path target) throws IOException {
 
-        final Collection<LogMessage> messages = new ArrayList<>();
+        final Collection<LogMessage> messages = new LinkedHashSet<>();
         Files.walkFileTree(modulesDir, new FileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
@@ -215,6 +216,19 @@ public class MessageExporter {
             this.length = length;
             this.msgId = msgId;
             this.returnType = returnType;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            LogMessage that = (LogMessage) o;
+            return length == that.length && msgId == that.msgId && Objects.equals(level, that.level) && Objects.equals(code, that.code) && Objects.equals(message, that.message) && Objects.equals(returnType, that.returnType);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(level, code, message, length, msgId, returnType);
         }
     }
 }

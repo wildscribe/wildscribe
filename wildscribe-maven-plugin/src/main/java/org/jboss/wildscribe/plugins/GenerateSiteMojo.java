@@ -278,7 +278,7 @@ public class GenerateSiteMojo extends AbstractMojo {
     private void createMessageFile(final Path wildflyHome, final Path dir, final String baseFileName) throws MojoExecutionException {
         // Generate the message file
         try {
-            MessageExporter.export(wildflyHome.resolve("modules"), dir.resolve(baseFileName + ".messages"));
+            MessageExporter.export(wildflyHome, dir.resolve(baseFileName + ".messages"));
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to create the message file for directory " + wildflyHome, e);
         }

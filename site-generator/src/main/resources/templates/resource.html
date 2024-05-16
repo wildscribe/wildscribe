@@ -35,6 +35,14 @@
     <p>${stabilityEmoji(model)} ${model.description}</p>
 </div>
 
+<#if has_messages>
+
+<div class="page-header">
+    <p><a href="${relativePathToContextRoot}log-message-reference.html">Log and Exception Message Code Reference</a></p>
+</div>
+
+</#if>
+
 <#if model.runtime>
     <div class="alert alert-info" role="alert">
         <strong>Runtime only resource</strong> This resource is runtime only and doesn't have any persistent configuration.
@@ -368,16 +376,5 @@
     </div>
 
 </#if>
-<#if has_messages>
 
-<div class="page-header">
-
-    <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#messages">Log Messages</h4>
-
-    <div class="collapse show" id="messages">
-        <a href="${relativePathToContextRoot}log-message-reference.html">Log and Exception Message Code Reference</a>
-    </div>
-</div>
-
-</#if>
 

@@ -20,9 +20,10 @@ public class Operation implements Comparable<Operation> {
     private final Deprecated deprecated;
     private final boolean readOnly;
     private final boolean runtimeOnly;
+    private final String stability;
 
 
-    public Operation(String name, String description, List<Parameter> parameters, Deprecated deprecated, Reply reply, boolean readOnly, boolean runtimeOnly) {
+    public Operation(String name, String description, List<Parameter> parameters, Deprecated deprecated, Reply reply, boolean readOnly, boolean runtimeOnly, String stability) {
         this.name = name;
         this.description = description;
         this.parameters = parameters;
@@ -30,6 +31,7 @@ public class Operation implements Comparable<Operation> {
         this.reply = reply;
         this.readOnly = readOnly;
         this.runtimeOnly = runtimeOnly;
+        this.stability = stability;
     }
 
     public String getName() {
@@ -58,6 +60,10 @@ public class Operation implements Comparable<Operation> {
 
     public boolean isRuntimeOnly() {
         return runtimeOnly;
+    }
+
+    public String getStability() {
+        return stability;
     }
 
     public static Operation fromProperty(final Property property) {
@@ -106,8 +112,9 @@ public class Operation implements Comparable<Operation> {
         //todo this info is missing in model
         boolean readOnly = false; //op.get("read-only").asBoolean(false);
         boolean runtimeOnly = false; //op.get("runtime-only").asBoolean(false);
+        String stability = op.get("stability").asStringOrNull();
 
-        return new Operation(name, description, parameters, Deprecated.fromModel(op), r, readOnly, runtimeOnly);
+        return new Operation(name, description, parameters, Deprecated.fromModel(op), r, readOnly, runtimeOnly, stability);
     }
 
     @Override

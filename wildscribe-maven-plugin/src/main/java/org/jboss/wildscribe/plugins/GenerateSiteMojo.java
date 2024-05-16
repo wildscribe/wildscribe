@@ -42,8 +42,8 @@ import org.jboss.wildscribe.site.Generator;
 import org.wildfly.core.launcher.CommandBuilder;
 import org.wildfly.core.launcher.Launcher;
 import org.wildfly.core.launcher.StandaloneCommandBuilder;
-import org.wildfly.plugin.core.ContainerDescription;
-import org.wildfly.plugin.core.ServerHelper;
+import org.wildfly.plugin.tools.ContainerDescription;
+import org.wildfly.plugin.tools.ServerHelper;
 import org.wildscribe.logs.MessageExporter;
 
 /**
@@ -130,6 +130,13 @@ public class GenerateSiteMojo extends AbstractMojo {
     private List<String> requiredExtensions;
 
     /**
+     * The stability level of the server.
+     * already exist on the server then they will be added.
+     */
+    @Parameter(alias = "stability", property = "wildscribte.stability.level")
+    private String stability;
+
+    /**
      * Set to {@code true} if you want this goal to be skipped, otherwise {@code false}.
      */
     @Parameter(defaultValue = "false", property = "wildscribe.skip")
@@ -200,6 +207,10 @@ public class GenerateSiteMojo extends AbstractMojo {
     private StandaloneCommandBuilder createCommandBuilder(final Path wildflyPath) {
         final StandaloneCommandBuilder commandBuilder = StandaloneCommandBuilder.of(wildflyPath)
                 .setServerConfiguration(serverConfig);
+
+        if (stability != null) {
+            commandBuilder.setStability(stability);
+        }
 
         if (hostname != null) {
             commandBuilder.setBindAddressHint("management", hostname);

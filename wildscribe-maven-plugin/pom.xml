@@ -29,7 +29,7 @@
     <packaging>maven-plugin</packaging>
 
     <prerequisites>
-        <maven>${version.org.apache.maven.maven-core}</maven>
+        <maven>3.6.0</maven>
     </prerequisites>
 
     <properties>

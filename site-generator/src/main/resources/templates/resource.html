@@ -12,27 +12,34 @@
   <#return "">
 </#function>
 
-<ol class="breadcrumb">
-<#list breadcrumbs as crumb>
-        <#if crumb_has_next>
-            <li class="breadcrumb-item">
-                <a href="${relativePathToContextRoot}${crumb.url}">${crumb.label}</a>
-            </li>
-            <#else>
-                <li class="breadcrumb-item active">${crumb.label}</li>
-        </#if>
-    </#list>
-</ol>
-
-<#if model.deprecated.deprecated>
-    <div class="alert alert-danger">
-        <strong>Deprecated</strong> Since ${model.deprecated.since}
-        <div>${model.deprecated.reason}</div>
+<div class="card mb-4">
+    <div class="card-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb pt-3">
+            <#list breadcrumbs as crumb>
+                    <#if crumb_has_next>
+                        <li class="breadcrumb-item">
+                            <a href="${relativePathToContextRoot}${crumb.url}">${crumb.label}</a>
+                        </li>
+                        <#else>
+                            <li class="breadcrumb-item active" aria-current="page">${crumb.label}</li>
+                    </#if>
+                </#list>
+            </ol>
+        </nav>
     </div>
-</#if>
+    <div class="card-body">
+        <#if model.deprecated.deprecated>
+            <div class="alert alert-danger">
+                <strong>Deprecated</strong> Since ${model.deprecated.since}
+                <div>${model.deprecated.reason}</div>
+            </div>
+        </#if>
 
-<div class="well">
-    <p>${stabilityEmoji(model)} ${model.description}</p>
+        <div>
+            <p>${stabilityEmoji(model)} ${model.description}</p>
+        </div>
+    </div>
 </div>
 
 <#if has_messages>
@@ -52,7 +59,7 @@
 <#if model.children?size != 0>
 <div class="page-header">
 
-    <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#children">Children (${model.children?size})</h4>
+    <h4 class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#children">Children (${model.children?size})</h4>
 
     <div class="collapse show" id="children">
         <ul>
@@ -88,7 +95,7 @@
 <#if model.capabilities?size != 0>
     <div class="page-header">
 
-        <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#capabilities">Provided capabilities(${model.capabilities?size})</h4>
+        <h4 class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#capabilities">Provided capabilities(${model.capabilities?size})</h4>
         <div class="collapse show table-responsive capabilities" id="capabilities">
             <table class="table table-striped">
                 <thead>
@@ -123,14 +130,14 @@
 
     <div class="page-header">
 
-        <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#attributes">Attributes
+        <h4 class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#attributes">Attributes
             (${model.attributes?size})</h4>
         <div class="collapse show" id="attributes">
             <div class="panel">
                 <ul>
                     <#list model.attributes as attribute>
                         <li>
-                            <a id="attr-${attribute.name}" href="#attr-${attribute.name}" data-toggle="collapse" data-target="#attribute-${attribute.name}" class="${attribute.deprecated.deprecated?then('deprecated','')}">${stabilityEmoji(attribute)} ${attribute.name}</a>
+                            <a id="attr-${attribute.name}" href="#attr-${attribute.name}" data-bs-toggle="collapse" data-bs-target="#attribute-${attribute.name}" class="${attribute.deprecated.deprecated?then('deprecated','')}">${stabilityEmoji(attribute)} ${attribute.name}</a>
                             ${attribute.description}
                         </li>
 
@@ -166,7 +173,10 @@
                                         </td>
                                         <td>
                                             <#if globalCapabilities[attribute.capabilityReference]??>
-                                            <button tabindex="0" type="button" class="btn btn-link" data-toggle="popover-provider-points" data-target="#popover-${attribute.name}-body" data-trigger="focus" title="Provider points" >${attribute.capabilityReference}</button>
+                                            <button tabindex="0" type="button" class="btn btn-link"
+                                                    data-bs-toggle="popover"
+                                                    data-bs-target="#popover-${attribute.name}-body"
+                                                    data-bs-trigger="focus" title="Provider points" >${attribute.capabilityReference}</button>
                                             <div class="invisible" id="popover-${attribute.name}-body" style="display:none">
                                                 <#assign cap = globalCapabilities[attribute.capabilityReference] />
                                                 <#if cap??>
@@ -304,14 +314,14 @@
 
     <div class="page-header">
 
-        <h4 class="btn btn-secondary" data-toggle="collapse" data-target="#operations">Operations
+        <h4 class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#operations">Operations
             (${model.operations?size})</h4>
 
         <div class="collapse show" id="operations">
             <ul>
                 <#list model.operations as op>
                     <li>
-                        <a id="op-${op.name}" href="#op-${op.name}" data-toggle="collapse" data-target="#operation-${op.name}" class="${(op.deprecated.deprecated)?then('deprecated','')}">${stabilityEmoji(op)} ${op.name}</a>
+                        <a id="op-${op.name}" href="#op-${op.name}" data-bs-toggle="collapse" data-bs-target="#operation-${op.name}" class="${(op.deprecated.deprecated)?then('deprecated','')}">${stabilityEmoji(op)} ${op.name}</a>
                         ${op.description}
 
                         <div id="operation-${op.name}" class="collapse">

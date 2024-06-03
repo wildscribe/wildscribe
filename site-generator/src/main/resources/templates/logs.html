@@ -1,19 +1,26 @@
-<ol class="breadcrumb">
-    <#list breadcrumbs as crumb>
-    <#if crumb_has_next>
-    <li class="breadcrumb-item">
-        <a href="${relativePathToContextRoot}${crumb.url}">${crumb.label}</a>
-    </li>
-    <#else>
-    <li class="breadcrumb-item active">${crumb.label}</li>
-</#if>
-</#list>
-</ol>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb pt-3">
+                <#list breadcrumbs as crumb>
+                <#if crumb_has_next>
+                <li class="breadcrumb-item">
+                    <a href="${relativePathToContextRoot}${crumb.url}">${crumb.label}</a>
+                </li>
+                <#else>
+                <li class="breadcrumb-item active" aria-current="page">${crumb.label}</li>
+            </#if>
+            </#list>
+            </ol>
+        </nav>
+    </div>
+</div>
 
 <#list codes as code>
-<h3 class="text-muted">${code}</h3>
+<h3 class="text-body-secondary">${code}</h3>
 
-<div class="table-responsiveg">
+<div class="table-responsive">
     <table class="table table-striped table-responsive">
         <thead>
         <tr>

@@ -85,7 +85,7 @@
         <version.invoker.plugin>3.7.0</version.invoker.plugin>
 
         <!-- plugin versions -->
-        <version.plugin.plugin>3.13.0</version.plugin.plugin>
+        <version.plugin.plugin>3.13.1</version.plugin.plugin>
 
         <!-- Checkstyle configuration -->
         <linkXRef>false</linkXRef>

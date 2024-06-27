@@ -43,16 +43,32 @@
     <licenses>
         <license>
             <name>Apache License 2.0</name>
-            <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
+            <url>https://repository.jboss.org/licenses/apache-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
 
+    <url>https://wildscribe.github.io</url>
+
+    <mailingLists>
+        <mailingList>
+            <name>JBoss User List</name>
+            <subscribe>https://lists.jboss.org/mailman/listinfo/jboss-user</subscribe>
+            <unsubscribe>https://lists.jboss.org/mailman/listinfo/jboss-user</unsubscribe>
+            <archive>http://lists.jboss.org/pipermail/jboss-user/</archive>
+        </mailingList>
+        <mailingList>
+            <name>WildFly Developer List</name>
+            <subscribe>https://lists.jboss.org/mailman/listinfo/wildfly-dev</subscribe>
+            <unsubscribe>https://lists.jboss.org/mailman/listinfo/wildfly-dev</unsubscribe>
+            <archive>http://lists.jboss.org/pipermail/wildfly-dev/</archive>
+        </mailingList>
+    </mailingLists>
+
     <properties>
         <!-- Require at least Java 11 to compile -->
         <jdk.min.version>11</jdk.min.version>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.release>11</maven.compiler.release>
 
         <!--
             Dependency versions. Please keep alphabetical.
@@ -98,6 +114,17 @@
         <module>message-dumper</module>
         <module>wildscribe-maven-plugin</module>
     </modules>
+
+    <scm>
+        <connection>scm:git://github.com/wildscribe/wildscribe.git</connection>
+        <developerConnection>scm:git://github.com/wildscribe/wildscribe.git</developerConnection>
+        <url>https://github.com/wildscribe/wildscribe</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/wildscribe/wildscribe/issues</url>
+    </issueManagement>
 
     <build>
         <plugins>

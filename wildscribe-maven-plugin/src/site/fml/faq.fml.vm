@@ -25,7 +25,7 @@
         <faq id="maven3">
             <question>What versions of maven will the plugin work with?</question>
             <answer>
-                <p>The plugin requires maven 3.5.2 or higher.</p>
+                <p>The plugin requires maven ${mavenMinVersion} or higher.</p>
             </answer>
         </faq>
     </part>

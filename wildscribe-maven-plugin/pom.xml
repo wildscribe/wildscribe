@@ -29,7 +29,7 @@
     <packaging>maven-plugin</packaging>
 
     <prerequisites>
-        <maven>3.6.0</maven>
+        <maven>${maven.min.version}</maven>
     </prerequisites>
 
     <properties>
@@ -38,6 +38,7 @@
         <!-- documentation properties -->
         <appServerName>WildFly</appServerName>
         <pluginPrefix>wildscribe</pluginPrefix>
+        <mavenMinVersion>${maven.min.version}</mavenMinVersion>
 
         <wildfly.scm.connection>scm:git://github.com/wildscribe/wildscribe.git</wildfly.scm.connection>
         <wildfly.scm.developer.connection>scm:git:git@github.com:wildscribe/wildscribe.git
@@ -110,6 +111,16 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>${version.plugin.plugin}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-report-plugin</artifactId>
+                <version>${version.plugin.plugin}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.4.1</version>
             </plugin>
         </plugins>
     </reporting>

@@ -30,7 +30,7 @@
 
     <groupId>org.jboss.wildscribe</groupId>
     <artifactId>wildscribe-parent</artifactId>
-    <version>3.1.0.Final-SNAPSHOT</version>
+    <version>3.1.0.Final</version>
 
     <name>Wildscribe</name>
     <description>

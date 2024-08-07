@@ -65,6 +65,18 @@
             <groupId>com.googlecode.htmlcompressor</groupId>
             <artifactId>htmlcompressor</artifactId>
         </dependency>
+
+        <!-- JSON Dependencies -->
+        <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>${version.jakarta.json.json-api}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson</artifactId>
+            <version>${version.org.eclipse.parsson}</version>
+        </dependency>
         <!-- Test dependencies -->
 
         <dependency>

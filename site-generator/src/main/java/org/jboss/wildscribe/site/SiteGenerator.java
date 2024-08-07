@@ -93,16 +93,19 @@ class SiteGenerator {
     public void createVersions() throws IOException, TemplateException {
         for (Version version : versions) {
             LOGGER.infof("Processing %s %s", version.getProduct(), version.getVersion());
-            new SingleVersionGenerator(versions, version, configuration, outputDir, DEFAULT_LAYOUT_HTML).generate();
+            try (SingleVersionGenerator generator = new SingleVersionGenerator(versions, version, configuration, outputDir, DEFAULT_LAYOUT_HTML)) {
+                generator.generate();
+            }
 
         }
     }
 
 
     public void createSingleVersion() throws IOException, TemplateException {
-        SingleVersionGenerator gen = new SingleVersionGenerator(null, versions.get(0), configuration, outputDir, SINGLE_LAYOUT_HTML);
-        gen.setSingle(true);
-        gen.generate();
+        try (SingleVersionGenerator gen = new SingleVersionGenerator(null, versions.get(0), configuration, outputDir, SINGLE_LAYOUT_HTML)) {
+            gen.setSingle(true);
+            gen.generate();
+        }
     }
 
     private String getUrlBase() {

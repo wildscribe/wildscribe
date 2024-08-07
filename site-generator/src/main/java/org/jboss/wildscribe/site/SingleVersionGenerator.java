@@ -2,8 +2,6 @@ package org.jboss.wildscribe.site;
 
 import static org.jboss.wildscribe.site.SiteGenerator.INDEX_HTML;
 
-import org.jboss.dmr.ModelNode;
-
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -11,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,16 +18,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import jakarta.json.Json;
+import jakarta.json.stream.JsonGenerator;
+import org.jboss.dmr.ModelNode;
 
 /**
  * @author Tomaz Cerar (c) 2017 Red Hat Inc.
  */
-class SingleVersionGenerator {
+class SingleVersionGenerator implements AutoCloseable {
     public static final String RESOURCE_HTML = "resource.html";
     private static final String LOG_MESSAGE_REFERENCE_HTML = "log-message-reference.html";
     private static final String LOGS_HTML = "logs.html";
@@ -38,15 +42,19 @@ class SingleVersionGenerator {
     private final Version version;
     private final Configuration configuration;
     private final Path outputDir;
+    private final JsonGenerator jsonGenerator;
+    private final AtomicInteger searchId = new AtomicInteger();
+    private final AtomicBoolean indexStarted = new AtomicBoolean();
     private boolean single = false;
 
 
-    SingleVersionGenerator(List<Version> versions, Version version, Configuration configuration, Path outputDir, String layoutHtml) {
+    SingleVersionGenerator(List<Version> versions, Version version, Configuration configuration, Path outputDir, String layoutHtml) throws IOException {
         this.versions = versions;
         this.version = version;
         this.configuration = configuration;
         this.outputDir = outputDir;
         this.layoutHtml = layoutHtml;
+        jsonGenerator = Json.createGenerator(Files.newBufferedWriter(outputDir.resolve("search-index.json")));
     }
 
     public void setSingle(boolean single) {
@@ -62,6 +70,15 @@ class SingleVersionGenerator {
         createResourcePage(model, template, messages != null);
         if (messages != null) {
             createLogMessagePage(template, messages);
+        }
+    }
+
+    @Override
+    public void close() {
+        if (jsonGenerator != null) {
+            // End the document
+            jsonGenerator.writeEnd();
+            jsonGenerator.close();
         }
     }
 
@@ -107,6 +124,8 @@ class SingleVersionGenerator {
         final String currentUrlWithSeparator = currentUrl + (currentUrl.isEmpty() ? "" : "/");
         final String productHomeUrl = single ? "" : version.getProduct() + '/' + version.getVersion();
         final ResourceDescription resourceDescription = ResourceDescription.fromModelNode(PathAddress.pathAddress(path), model, capabilities);
+        // Append to the search index
+        appendSearchIndex(resourceDescription, currentUrl, relativePathToContextRoot);
         final List<Breadcrumb> crumbs = buildBreadcrumbs(path);
         final Map<String, Object> data = new HashMap<>();
         data.put("page", RESOURCE_HTML);
@@ -125,7 +144,8 @@ class SingleVersionGenerator {
         if (single) {
             parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + currentUrl);
         } else {
-            parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + (currentUrl.isEmpty() || currentUrl.startsWith(File.separator)? "" : File.separator) + currentUrl);
+            parent = new File(outputDir.toFile()
+                    .getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion() + (currentUrl.isEmpty() || currentUrl.startsWith(File.separator) ? "" : File.separator) + currentUrl);
         }
         parent.mkdirs();
         StringWriter stringWriter = new StringWriter();
@@ -156,7 +176,8 @@ class SingleVersionGenerator {
                         PathElement[] newPath = addToPath(path, child.getName(), registration.getName());
 
                         ModelNode childModel = model.get("children").get(child.getName());
-                        if (childModel.hasDefined("model-description") && childModel.get("model-description").hasDefined(registration.getName())) {
+                        if (childModel.hasDefined("model-description") && childModel.get("model-description")
+                                .hasDefined(registration.getName())) {
                             ModelNode newModel = childModel.get("model-description").get(registration.getName());
 
                             createResourcePage(newModel, template, false, newPath);
@@ -166,6 +187,26 @@ class SingleVersionGenerator {
             }
         }
 
+    }
+
+    private void appendSearchIndex(final ResourceDescription resourceDescription, final String url, final String relativeUrl) throws IOException {
+        if (resourceDescription.getAttributes().isEmpty()) {
+            return;
+        }
+        if (indexStarted.compareAndSet(false, true)) {
+            jsonGenerator.writeStartArray();
+        }
+        for (var attribute : resourceDescription.getAttributes()) {
+            jsonGenerator.writeStartObject();
+            jsonGenerator.write("id", searchId.incrementAndGet());
+            // Do not allow the attribute name to be split
+            //jsonGenerator.write("attribute", String.format("\"%s\"", attribute.getName()));
+            jsonGenerator.write("attribute", attribute.getName());
+            jsonGenerator.write("description", attribute.getDescription());
+            jsonGenerator.write("url", url);
+            jsonGenerator.write("relativeUrl", relativeUrl);
+            jsonGenerator.writeEnd();
+        }
     }
 
     static String createRelativePathToContextRoor(String relativeUrl) {
@@ -195,7 +236,7 @@ class SingleVersionGenerator {
 
         Map<String, List<DisplayMessage>> map = new TreeMap<>();
         for (LogMessage msg : messages) {
-            if(msg.getCode().isEmpty()) {
+            if (msg.getCode().isEmpty()) {
                 continue;
             }
             String realId = msg.getCode() + String.format("%0" + msg.getLength() + "d", msg.getMsgId());
@@ -209,7 +250,8 @@ class SingleVersionGenerator {
         if (single) {
             parent = new File(outputDir.toFile().getAbsolutePath() + File.separator);
         } else {
-            parent = new File(outputDir.toFile().getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion());
+            parent = new File(outputDir.toFile()
+                    .getAbsolutePath() + File.separator + version.getProduct() + File.separator + version.getVersion());
         }
         parent.mkdirs();
         StringWriter stringWriter = new StringWriter();

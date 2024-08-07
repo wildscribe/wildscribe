@@ -12,6 +12,18 @@
          }
          new bootstrap.Popover(e, opts);
       });
+
+      // Show the collapsed attribute if found
+      if (window.location.hash) {
+         const hash = window.location.hash;
+         const i = hash.indexOf("#attr-");
+         if (i === 0) {
+            const attr = document.querySelector(`#attribute-${hash.substring(6)}`);
+            if (attr) {
+               bootstrap.Collapse.getOrCreateInstance(attr).show();
+            }
+         }
+      }
    });
 })()
 
